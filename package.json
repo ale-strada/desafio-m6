@@ -4,7 +4,8 @@
   "license": "MIT",
   "type": "commonjs",
   "engines": {
-    "node": "14.x"
+    "node": "14.15.4",
+    "yarn":"1.22.10"
   },
   "scripts": {
     "dev": "nodemon --watch ./server/index.ts --exec ts-node ./server/dev.ts",
