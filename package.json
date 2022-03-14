@@ -8,7 +8,7 @@
     "dev:front": "parcel serve ./client/index.html",
     "test": "ava",
     "build:front": "parcel build ./client/index.html",
-    "build:api": "tsc",
+    "build:api":"tsc",
     "build": "yarn build:front && yarn build:api",
     "start": "node ./server/index.js"
   },
