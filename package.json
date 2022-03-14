@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "commonjs",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "dev": "nodemon --watch ./server/index.ts --exec ts-node ./server/dev.ts",
     "dev:front": "parcel serve ./client/index.html",
