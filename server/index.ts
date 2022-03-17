@@ -11,9 +11,10 @@ app.use(cors());
 
 app.use(express.static("dist"));
 
-const userCollection = baseDeDatos.collection("users");
-const roomsCollection = baseDeDatos.collection("rooms");
+// const userCollection = baseDeDatos.collection("users");
+// const roomsCollection = baseDeDatos.collection("rooms");
 const gamersCollection = baseDeDatos.collection("gamers");
+const gameRoomsCollection = baseDeDatos.collection("game-rooms");
 
 app.get("/hola", (req, res) => {
   res.json({
@@ -21,11 +22,6 @@ app.get("/hola", (req, res) => {
   });
 });
 
-// app.get("/chatrooms/general/messages", (req, res) => {
-//   res.json({
-//     message: "data",
-//   });
-// });
 app.get("/gamers/:gamerId", (req, res) => {
   const { gamerId } = req.params;
   gamersCollection
@@ -37,11 +33,9 @@ app.get("/gamers/:gamerId", (req, res) => {
     });
 });
 
-// ------------------------------
-
-app.post("/messages/:rtdbRoomId", function (req, res) {
+app.post("/games/:rtdbRoomId", function (req, res) {
   var rtdbRoomId = req.body.rtdbRoomId;
-  const chatRoomRef = rtdb.ref("/rooms/" + rtdbRoomId + "/messages");
+  const chatRoomRef = rtdb.ref("/rooms/" + rtdbRoomId + "/currentGame");
   chatRoomRef.push(req.body, function (err) {
     res.json("todo ok");
   });
@@ -50,12 +44,12 @@ app.post("/messages/:rtdbRoomId", function (req, res) {
 app.post("/singup", (req, res) => {
   const email = req.body.email;
   const nombre = req.body.nombre;
-  userCollection
+  gamersCollection
     .where("email", "==", email)
     .get()
     .then((searchResponse) => {
       if (searchResponse.empty) {
-        userCollection
+        gamersCollection
           .add({
             email,
             nombre,
@@ -77,7 +71,7 @@ app.post("/singup", (req, res) => {
 
 app.post("/auth", (req, res) => {
   const { email } = req.body;
-  userCollection
+  gamersCollection
     .where("email", "==", email)
     .get()
     .then((searchResponse) => {
@@ -93,24 +87,23 @@ app.post("/auth", (req, res) => {
     });
 });
 
-app.post("/rooms", (req, res) => {
+app.post("/game-rooms", (req, res) => {
   const { userId } = req.body;
-  userCollection
+  gamersCollection
     .doc(userId.toString())
     .get()
     .then((doc) => {
       if (doc.exists) {
-        const roomRef = rtdb.ref("rooms/" + nanoid());
+        const roomRef = rtdb.ref("game-rooms/" + nanoid());
         roomRef
           .set({
-            messages: [],
-            owner: userId,
+            userId: userId,
           })
           .then(() => {
             const roomLongId = roomRef.key;
             const roomId = 1000 + Math.floor(Math.random() * 999);
 
-            roomsCollection
+            gameRoomsCollection
               .doc(roomId.toString())
               .set({
                 rtdbRoomId: roomLongId,
@@ -129,15 +122,15 @@ app.post("/rooms", (req, res) => {
     });
 });
 
-app.get("/rooms/:roomId", (req, res) => {
+app.get("/game-rooms/:roomId", (req, res) => {
   const { userId } = req.query;
   const { roomId } = req.params;
-  userCollection
+  gamersCollection
     .doc(userId.toString())
     .get()
     .then((doc) => {
       if (doc.exists) {
-        roomsCollection
+        gameRoomsCollection
           .doc(roomId)
           .get()
           .then((snap) => {
