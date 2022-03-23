@@ -42,17 +42,15 @@ app.post("/games/:rtdbRoomId", function (req, res) {
 });
 
 app.post("/singup", (req, res) => {
-  const email = req.body.email;
-  const nombre = req.body.nombre;
+  const gamerName = req.body.gamerName;
   gamersCollection
-    .where("email", "==", email)
+    .where("gamerName", "==", gamerName)
     .get()
     .then((searchResponse) => {
       if (searchResponse.empty) {
         gamersCollection
           .add({
-            email,
-            nombre,
+            gamerName,
           })
           .then((newUserRef) => {
             res.json({
@@ -70,9 +68,9 @@ app.post("/singup", (req, res) => {
 });
 
 app.post("/auth", (req, res) => {
-  const { email } = req.body;
+  const { gamerName } = req.body;
   gamersCollection
-    .where("email", "==", email)
+    .where("gamerName", "==", gamerName)
     .get()
     .then((searchResponse) => {
       if (searchResponse.empty) {
@@ -145,7 +143,7 @@ app.get("/game-rooms/:roomId", (req, res) => {
     });
 });
 app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/dist/index.html");
+  res.sendFile(__dirname + "../dist/index.html");
 });
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

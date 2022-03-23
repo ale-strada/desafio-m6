@@ -5,16 +5,27 @@
   "type": "commonjs",
   "engines": {
     "node": "14.15.4",
-    "yarn":"1.22.10"
+    "yarn": "1.22.10"
+  },
+  "browserModern": "dist/index.html",
+  "targets": {
+    "browserModern": {
+      "engines": {
+        "browsers": [
+          "last 1 Chrome version"
+        ]
+      }
+    }
   },
   "scripts": {
     "dev": "nodemon --watch ./server/index.ts --exec ts-node ./server/dev.ts",
     "dev:front": "parcel serve ./client/index.html",
     "test": "ava",
     "build:front": "parcel build ./client/index.html",
-    "build:api":"tsc",
+    "build:api": "tsc",
     "build": "yarn build:front && yarn build:api",
-    "start": "node ./server/index.js"
+    "start": "node ./server/index.js",
+    "ver": "yarn build:front && yarn dev:front"
   },
   "dependencies": {
     "@types/node": "17.0.5",
