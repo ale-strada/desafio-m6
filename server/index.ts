@@ -2,6 +2,7 @@ import { baseDeDatos, rtdb } from "./db";
 import * as express from "express";
 import { nanoid } from "nanoid";
 import * as cors from "cors";
+import path = require("path");
 
 const port = process.env.PORT || 3100;
 const app = express();
@@ -143,8 +144,9 @@ app.get("/game-rooms/:roomId", (req, res) => {
     });
 });
 app.get("*", (req, res) => {
-  res.sendFile(__dirname + "../dist/index.html");
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
