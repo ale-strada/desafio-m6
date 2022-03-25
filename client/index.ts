@@ -3,7 +3,7 @@ import "./pages/home";
 import "./pages/selectRoom";
 import "./pages/selectPlayers";
 import "./pages/instructions";
-// import "./pages/play";
+import "./pages/play";
 import "./router";
 import { state } from "./state";
 import { initTitle } from "./components/titulo";
@@ -13,13 +13,6 @@ import { initManosPlay } from "./components/manos/manosplay";
 import { initTexto } from "./components/texto-instructions";
 import { initCountdown } from "./components/countdown";
 
-// (function () {
-//   state.init();
-//   initTitle();
-//   initMessage();
-//   initButton();
-// })();
-
 (function () {
   state.init();
   initTitle();
@@ -28,7 +21,4 @@ import { initCountdown } from "./components/countdown";
   initManosPlay();
   initTexto();
   initCountdown();
-
-  // const root = document.querySelector(".root");
-  // root.textContent = "hola";
 })();

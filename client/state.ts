@@ -1,16 +1,10 @@
 const API_BASE_URL = "";
 import { rtdb, ref, onValue } from "./rtdb";
 import map from "lodash/map";
-// import { json } from "stream/consumers";
-
-// type Message = {
-//   from: string;
-//   message: string;
-// };
 
 type Game = {
   choice: string;
-  name: string;
+  gamerName: string;
   online: boolean;
   start: boolean;
 };
@@ -21,59 +15,40 @@ const state = {
     userId: "",
     roomId: "",
     rtdbRoomId: "",
-    game: {
-      choice: "",
-      online: "",
-      start: "",
-    },
+    games: [],
   },
   listeners: [],
+
   init() {
     const lastStorageState = localStorage.getItem("state");
     const cs = this.getState();
     // state.setState(JSON.parse(lastStorageState));
   },
   listenRoom() {
-    // console.log("listenroom");
-
     const cs = this.getState();
-    const mensajeRef = ref(rtdb, "/rooms/" + cs.rtdbRoomId);
+    const gameRef = ref(rtdb, "/rooms/" + cs.rtdbRoomId);
 
-    onValue(mensajeRef, (snapshot) => {
+    onValue(gameRef, (snapshot) => {
       const currentState = this.getState();
-      const messagesFromServer = snapshot.val();
-      // console.log(messagesFromServer);
-
-      // const messagesList = map(messagesFromServer.messages);
-
-      // currentState.messages = messagesList;
+      const data = snapshot.val();
+      const gamesList = map(data.currentGame);
+      currentState.games = gamesList;
       this.setState(currentState);
     });
   },
+
   getState() {
     return this.data;
   },
-  setNombre(name: string) {
-    const currentState = this.getState();
-    currentState.name = name;
-    this.setState(currentState);
-  },
-  // setEmail(email: string) {
-  //   const currentState = this.getState();
-  //   currentState.email = email;
-  //   this.setState(currentState);
-  // },
-  pushMessage(message: string) {
+  pushGame(game: Game) {
     const cs = state.getState();
-    const nombreDelState = this.data.fullName;
-    fetch(API_BASE_URL + "/messages/:rtdbRoomId", {
+    fetch(API_BASE_URL + "/currentGame/:rtdbRoomId", {
       method: "post",
       headers: {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        from: nombreDelState,
-        message: message,
+        game: game,
         rtdbRoomId: cs.rtdbRoomId,
       }),
     });
@@ -143,8 +118,7 @@ const state = {
   askNewRoom(callback?) {
     const cs = this.getState();
     if (cs.userId) {
-      // console.log(cs.userId);
-      fetch(API_BASE_URL + "/game-rooms", {
+      fetch(API_BASE_URL + "/gamerooms", {
         method: "post",
         headers: {
           "content-type": "application/json",
@@ -168,7 +142,7 @@ const state = {
   accessToRoom(callback?) {
     const cs = this.getState();
     const roomId = this.roomId;
-    fetch(API_BASE_URL + "/game-rooms/" + cs.roomId + "?userId=" + cs.userId)
+    fetch(API_BASE_URL + "/gamerooms/" + cs.roomId + "?userId=" + cs.userId)
       .then((res) => {
         return res.json();
       })

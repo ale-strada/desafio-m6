@@ -6,6 +6,6 @@ router.setRoutes([
   { path: "/welcome", component: "welcome-page" },
   { path: "/selectRoom", component: "select-room-page" },
   { path: "/instructions", component: "instructions-page" },
-  { path: "/play", component: "play" },
   { path: "/selectPlayers", component: "select-players-page" },
+  { path: "/game", component: "game-page" },
 ]);

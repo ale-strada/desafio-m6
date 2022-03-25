@@ -4,12 +4,11 @@ import { state } from "../../state";
 
 class InstrictionsPage extends HTMLElement {
   connectedCallback() {
-    state.subscribe(() => {
-      const currentState = state.getState();
-      this.render();
-    });
-
     this.render();
+    const button = this.querySelector(".button-new");
+    button.addEventListener("click", () => {
+      Router.go("/game");
+    });
   }
 
   render() {
@@ -72,7 +71,7 @@ class InstrictionsPage extends HTMLElement {
     </texto-comp>
 
     <div class="button-new">
-    <button-comp>¡Jugar!</button-comp>
+    <button-comp class="button-jugar">¡Jugar!</button-comp>
     </div>
     
     <manos-comp></manos-comp>
