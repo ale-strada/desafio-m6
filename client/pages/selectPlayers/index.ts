@@ -12,12 +12,19 @@ class SelectPlayersPage extends HTMLElement {
     buttonOnePlayer.addEventListener("click", (e) => {
       e.preventDefault();
       console.log("1 player");
+      const cs = state.getState();
+      cs.currentGame.jugadaLocal.online = true;
+      cs.online = true;
+      state.setState(cs);
       Router.go("/instructions");
     });
     buttonTwoPlayers.addEventListener("click", (e) => {
       e.preventDefault();
       console.log("2 player");
-
+      const cs = state.getState();
+      cs.currentGame.jugadaLocal.online = true;
+      cs.online = true;
+      state.setState(cs);
       state.askNewRoom(() => {
         state.accessToRoom(() => {
           state.listenRoom();

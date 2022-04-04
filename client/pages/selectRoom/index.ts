@@ -14,10 +14,13 @@ class SelectRoomPage extends HTMLElement {
       const target = e.target as any;
 
       cs.roomId = target.RoomId.value;
+      cs.currentGame.jugadaLocal.online = true;
+      cs.online = true;
       state.setState(cs);
 
       state.accessToRoom(() => {
         state.listenRoom();
+        // state.pushGame(cs.currentGame);
       });
 
       Router.go("/instructions");

@@ -1,25 +1,85 @@
 let imagen = require("url:../../img/fondo.png");
 import { Router } from "@vaadin/router";
+import { addListener } from "process";
 import { state } from "../../state";
-
+type Game = {
+  userId: string;
+  jugadaLocal: {
+    gamerName: string;
+    choice: string;
+    online: boolean;
+    start: boolean;
+  };
+  oponentID: string;
+  jugadaVisitor: {
+    gamerName: string;
+    choice: string;
+    online: boolean;
+    start: boolean;
+  };
+};
 class InstrictionsPage extends HTMLElement {
+  localPlayer: string;
+  visit: string;
+  roomId: number;
+  start: boolean;
+  visitor: boolean;
+
   connectedCallback() {
+    state.subscribe(() => {
+      const cs = state.getState();
+      this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
+      this.visit = cs.currentGame.jugadaVisitor.gamerName;
+      this.roomId = cs.roomId;
+      this.start = cs.currentGame.jugadaLocal.start;
+      this.visitor = cs.visitor;
+      console.log(this.visit, "visitante");
+
+      this.render();
+    });
+
     this.render();
+  }
+  addListenerts() {
     const button = this.querySelector(".button-new");
     button.addEventListener("click", () => {
+      const cs = state.getState();
+      this.start = true;
+      if (this.visitor) {
+        cs.currentGame.jugadaVisitor.start = this.start;
+      } else {
+        cs.currentGame.jugadaLocal.start = this.start;
+      }
+      state.pushGame(cs.currentGame);
       Router.go("/game");
     });
+    const codigoSala = this.querySelector(".codigo");
+    const instruccionFinal = this.querySelector(".instruccion-final");
+
+    (function ocultarCodigo() {
+      instruccionFinal.classList.add("none");
+      setTimeout(() => {
+        codigoSala.classList.add("none");
+        instruccionFinal.classList.remove("none");
+      }, 6000);
+    })();
+
+    const cs = state.getState();
+    if (this.visitor) {
+      cs.currentGame.jugadaVisitor.gamerName = cs.gamerName;
+      cs.currentGame.jugadaVisitor.online = cs.online;
+      cs.currentGame.oponentID = cs.userId;
+      return cs;
+    }
+    console.log(cs, "VIENDO");
   }
 
   render() {
-    const cs = state.getState();
-    console.log(cs, "inst");
-
-    const localPlayer = cs.gamerName;
-    const visitor = "visitante";
-
     this.innerHTML = `
     <style class="select-style" type="text/css">
+    .none{
+      display:none;
+    }
     .conteiner {
       background-image:url(${imagen});
       background-repeat: round;
@@ -56,17 +116,17 @@ class InstrictionsPage extends HTMLElement {
     <div class="conteiner">
       <div class="header">
         <div class="players-conteiner">
-            <div class="player">${localPlayer}</div>
-            <div class="player visitor">${visitor}</div>
+            <div class="player">${this.localPlayer}</div>
+            <div class="player visitor">${this.visit}</div>
         </div>
         <div class="game-room-conteiner">
         <div class="player sala">Sala</div>
-        <div class="player">${cs.roomId}</div>
+        <div class="player">${this.roomId}</div>
         </div>
       </div>
     <titulo-comp>Piedra Papel ó Tijeras</titulo-comp>
-    <texto-comp>Compartí el codigo ${cs.roomId} con tu contrincante. </texto-comp>
-    <texto-comp>Presioná jugar
+    <texto-comp class="codigo">Compartí el codigo: ${this.roomId} con tu contrincante. </texto-comp>
+    <texto-comp class="instruccion-final">Presioná jugar
     y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.
     </texto-comp>
 
@@ -78,6 +138,7 @@ class InstrictionsPage extends HTMLElement {
 
     </div>
     `;
+    this.addListenerts();
   }
 }
 

@@ -1,4 +1,8 @@
+import { json } from "body-parser";
+import { getLeadingCommentRanges, isJSDocEnumTag } from "typescript";
 import { state } from "../../state";
+let imagen = require("url:../../img/fondo.png");
+
 type Game = {
   chioce: string;
   gamerName: string;
@@ -8,12 +12,29 @@ type Game = {
 
 class Gamepage extends HTMLElement {
   games: Game[] = [];
+  gamerName: string;
+  start: boolean;
+  online: boolean;
+  choice: string;
+  localPlayer: string;
+  visit: string;
+  roomId: number;
 
   connectedCallback() {
     state.subscribe(() => {
-      const currentState = state.getState();
-      this.games = currentState.games;
+      const cs = state.getState();
+      this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
+      this.visit = cs.currentGame.jugadaVisitor.gamerName;
+      this.roomId = cs.roomId;
+      this.games = cs.games;
+      this.gamerName = cs.gamerName;
+      this.online = cs.online;
+      this.start = cs.start;
 
+      // this.games.forEach(element => {
+      //   console.log(element.game.choice);
+
+      // });
       this.render();
     });
 
@@ -22,66 +43,114 @@ class Gamepage extends HTMLElement {
 
   addListenerts() {
     const boton = this.querySelector(".button");
+    const volver = this.querySelector(".button-volver");
+    const piedra = this.querySelector(".piedra");
+    const papel = this.querySelector(".papel");
+    const tijera = this.querySelector(".tijera");
 
     boton.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
+      if (this.gamerName == cs.gamerName) {
+        console.log("si");
+      } else {
+        console.log("VISITANTE");
+      }
       state.pushGame({
-        choice: "piedra",
-        gamerName: "ale",
-        online: true,
-        start: true,
+        choice: this.choice,
+        gamerName: this.gamerName,
+        online: this.online,
+        start: this.start,
       });
-      console.log(this.games);
+    });
+    // volver.addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   const cs = state.getState();
+    //   cs.games = [];
+    //   state.setState(cs);
+    // });
+
+    piedra.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cs = state.getState();
+      this.gamerName = cs.gamerName;
+      this.choice = "piedra";
+    });
+    papel.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cs = state.getState();
+      this.gamerName = cs.gamerName;
+      this.choice = "papel";
+    });
+    tijera.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cs = state.getState();
+      this.gamerName = cs.gamerName;
+      this.choice = "tijera";
     });
   }
   render() {
     const cs = state.getState();
     this.innerHTML = `
+    <style class="select-style" type="text/css">
+    .none{
+      display:none;
+    }
+    .conteiner {
+      background-image:url(${imagen});
+      background-repeat: round;
+      padding-top: 115px;
+      padding-bottom: 0px;
+      padding-left:auto;
+      padding-rigth:auto;
+      margin-bottom:0px
+      }
+      .header{
+        display: flex;
+        justify-content: space-between;
+        margin: 0 30px;
+      }
+      .player{
+        font-family: 'Source Serif Pro';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 24px;
+      }
+      .game-room-conteiner{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .sala{
+        font-weight: 900;
+        font-size: 30px;
+      }
+      .visitor{
+        color: red;
+      }
+    </style>
+
+    <div class="conteiner">
+      <div class="header">
+        <div class="players-conteiner">
+            <div class="player">${this.localPlayer}</div>
+            <div class="player visitor">${this.visit}</div>
+        </div>
+        <div class="game-room-conteiner">
+        <div class="player sala">Sala</div>
+        <div class="player">${this.roomId}</div>
+        </div>
+      </div>
       <titulo-comp>GAME</titulo-comp>
       <button class="button">JUGAR</button>
-      <div>${this.games} </div>
+      <div>
+      <button class="piedra">PIE</button>
+      <button class="papel">PAP</button>
+      <button class="tijera">TIJ</button>
+      </div>
+      <button class="button-volver">VOLVER</button>
       `;
-    //     <style class="select-style" type="text/css">
-    //     .messages {
-    //       display: flex;
-    //       flex-direction: column;
-    //       margin: 20px;
-    //      }
-    //      .message-comp{
-    //       align-self: end;
-    //      }
 
-    //    </style>
-    //     <titulo-comp>Chat</titulo-comp>
-    //     <h3 class="titulo label">${"room id:" + cs.roomId}</h3>
-    //     <div>
-    //      <div class="messages">
-    //         ${this.games
-    //           .map((m) => {
-    //             const message = {
-    //               quien: m.from,
-    //               que: m.message,
-    //             };
-    //             let messageClass = "";
-    //             if (message.quien === cs.fullName) {
-    //               messageClass = "message-comp";
-    //             }
-    //             return `<message-comp class= ${messageClass}>
-    //             ${JSON.stringify(message)}
-    //               </message-comp>`;
-    //           })
-    //           .join("")}
-    //      </div>
-    //      </div>
-
-    //      <div>
-    //      <form class="submit-message form">
-    //         <input class="input" type="text" name ="new-message">
-    //         <button class="button">Enviar</button>
-    //      </form>
-    //     </div>
-    //        `;
     this.addListenerts();
   }
 }

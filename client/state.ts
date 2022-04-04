@@ -2,21 +2,44 @@ const API_BASE_URL = "";
 import { rtdb, ref, onValue } from "./rtdb";
 import map from "lodash/map";
 
-type Game = {
-  choice: string;
-  gamerName: string;
-  online: boolean;
-  start: boolean;
-};
-
 const state = {
+  // data: {
+  //   gamerName: "",
+  //   userId: "",
+  //   roomId: "",
+  //   rtdbRoomId: "",
+  //   online: false,
+  //   start: false,
+  //   games: [],
+  //   oponentGames: [],
+  // },
   data: {
-    gamerName: "",
+    visitor: false,
     userId: "",
     roomId: "",
     rtdbRoomId: "",
-    games: [],
+    gamerName: "",
+    online: false,
+    start: false,
+    choice: "",
+    currentGame: {
+      userId: "",
+      jugadaLocal: {
+        gamerName: "",
+        choice: "",
+        online: false,
+        start: false,
+      },
+      oponentID: "",
+      jugadaVisitor: {
+        gamerName: "",
+        choice: "",
+        online: false,
+        start: false,
+      },
+    },
   },
+  historial: [],
   listeners: [],
 
   init() {
@@ -31,16 +54,39 @@ const state = {
     onValue(gameRef, (snapshot) => {
       const currentState = this.getState();
       const data = snapshot.val();
+
       const gamesList = map(data.currentGame);
-      currentState.games = gamesList;
-      this.setState(currentState);
+      const lastGame = gamesList[gamesList.length - 1];
+      if (lastGame) {
+        const currentState = state.getState();
+        const localGamer = currentState.currentGame.jugadaLocal.gamerName;
+        const rtdbName = lastGame.currentGame.jugadaLocal.gamerName;
+        if (localGamer == rtdbName) {
+          currentState.currentGame = lastGame.currentGame;
+        } else {
+          // const currentState = state.getState();
+          // aca se forma el currentGame con local de la rtbd y carlos de visitor
+          // currentState.currentGame.jugadaVisitor.gamerName =
+          //   currentState.gamerName;
+          // currentState.currentGame.jugadaVisitor.online = currentState.online;
+
+          // currentState.currentGame.oponentID = currentState.userId;
+          currentState.currentGame.jugadaLocal =
+            lastGame.currentGame.jugadaLocal;
+          currentState.currentGame.userId = lastGame.currentGame.userId;
+          currentState.visitor = true;
+        }
+        this.setState(currentState);
+      } else {
+        console.log("SALA VACIA");
+      }
     });
   },
 
   getState() {
     return this.data;
   },
-  pushGame(game: Game) {
+  pushGame(currentGame) {
     const cs = state.getState();
     fetch(API_BASE_URL + "/currentGame/:rtdbRoomId", {
       method: "post",
@@ -48,7 +94,7 @@ const state = {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        game: game,
+        currentGame: currentGame,
         rtdbRoomId: cs.rtdbRoomId,
       }),
     });
@@ -56,6 +102,7 @@ const state = {
   setGamerName(gamerName: string) {
     const cs = this.getState();
 
+    cs.currentGame.jugadaLocal.gamerName = gamerName;
     cs.gamerName = gamerName;
     this.setState(cs);
   },
@@ -69,14 +116,14 @@ const state = {
   },
   signUp(callback?) {
     const cs = this.getState();
-    if (cs.gamerName) {
+    if (cs.currentGame.jugadaLocal.gamerName) {
       fetch(API_BASE_URL + "/singup", {
         method: "post",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          gamerName: cs.gamerName,
+          gamerName: cs.currentGame.jugadaLocal.gamerName,
         }),
       })
         .then((res) => {
@@ -84,6 +131,7 @@ const state = {
         })
         .then((data) => {
           cs.userId = data.id;
+          cs.currentGame.userId = data.id;
           this.setState(cs);
           callback();
         });
@@ -94,13 +142,15 @@ const state = {
   },
   singIn(callback?) {
     const cs = this.getState();
-    if (cs.gamerName) {
+    if (cs.currentGame.jugadaLocal.gamerName) {
       fetch(API_BASE_URL + "/auth", {
         method: "post",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ gamerName: cs.gamerName }),
+        body: JSON.stringify({
+          gamerName: cs.currentGame.jugadaLocal.gamerName,
+        }),
       })
         .then((res) => {
           return res.json();
