@@ -3,15 +3,7 @@ import { getLeadingCommentRanges, isJSDocEnumTag } from "typescript";
 import { state } from "../../state";
 let imagen = require("url:../../img/fondo.png");
 
-type Game = {
-  chioce: string;
-  gamerName: string;
-  online: boolean;
-  start: boolean;
-};
-
 class Gamepage extends HTMLElement {
-  games: Game[] = [];
   gamerName: string;
   start: boolean;
   online: boolean;
@@ -19,6 +11,7 @@ class Gamepage extends HTMLElement {
   localPlayer: string;
   visit: string;
   roomId: number;
+  oponente: string;
 
   connectedCallback() {
     state.subscribe(() => {
@@ -26,15 +19,12 @@ class Gamepage extends HTMLElement {
       this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
       this.visit = cs.currentGame.jugadaVisitor.gamerName;
       this.roomId = cs.roomId;
-      this.games = cs.games;
-      this.gamerName = cs.gamerName;
-      this.online = cs.online;
-      this.start = cs.start;
+      if (cs.visitor) {
+        this.oponente = cs.currentGame.jugadaLocal.gamerName;
+      } else {
+        this.oponente = cs.currentGame.jugadaVisitor.gamerName;
+      }
 
-      // this.games.forEach(element => {
-      //   console.log(element.game.choice);
-
-      // });
       this.render();
     });
 
@@ -56,12 +46,7 @@ class Gamepage extends HTMLElement {
       } else {
         console.log("VISITANTE");
       }
-      state.pushGame({
-        choice: this.choice,
-        gamerName: this.gamerName,
-        online: this.online,
-        start: this.start,
-      });
+      state.pushGame(cs.currentGame);
     });
     // volver.addEventListener("click", (e) => {
     //   e.preventDefault();
@@ -73,19 +58,19 @@ class Gamepage extends HTMLElement {
     piedra.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.gamerName = cs.gamerName;
+      this.start = false;
       this.choice = "piedra";
     });
     papel.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.gamerName = cs.gamerName;
+      this.start = false;
       this.choice = "papel";
     });
     tijera.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.gamerName = cs.gamerName;
+      this.start = false;
       this.choice = "tijera";
     });
   }
@@ -149,6 +134,11 @@ class Gamepage extends HTMLElement {
       <button class="tijera">TIJ</button>
       </div>
       <button class="button-volver">VOLVER</button>
+      <div class="esperando">
+      <texto-comp>Esperando a que
+        <span class="info-del-state">${this.oponente || "OPONENTE"}</span>
+      presione ¡jugar!..</texto-comp>
+    </div>
       `;
 
     this.addListenerts();

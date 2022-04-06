@@ -5,7 +5,7 @@ export function initTexto() {
       this.render();
     }
     render() {
-      const textoOriginal = this.textContent;
+      const textoOriginal = this.innerHTML;
       var style = document.createElement("style");
       style.textContent = `
         .title{
@@ -18,6 +18,11 @@ export function initTexto() {
             padding: 0px 20px;
             color: #000000
         }
+        .info-del-state{
+          font-style: normal;
+          font-weight: 900;
+          font-size: 48px;
+        }
         `;
 
       var shadow = this.attachShadow({ mode: "open" });
@@ -26,6 +31,7 @@ export function initTexto() {
       var p = document.createElement("p");
       p.classList.add("title");
       p.textContent = textoOriginal;
+      p.innerHTML = textoOriginal;
       shadow.appendChild(p);
     }
   }

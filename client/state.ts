@@ -61,21 +61,18 @@ const state = {
         const currentState = state.getState();
         const localGamer = currentState.currentGame.jugadaLocal.gamerName;
         const rtdbName = lastGame.currentGame.jugadaLocal.gamerName;
-        if (localGamer == rtdbName) {
+        const rtdbOnline = lastGame.currentGame.jugadaLocal.online;
+        if (localGamer == rtdbName && rtdbOnline) {
           currentState.currentGame = lastGame.currentGame;
         } else {
-          // const currentState = state.getState();
-          // aca se forma el currentGame con local de la rtbd y carlos de visitor
-          // currentState.currentGame.jugadaVisitor.gamerName =
-          //   currentState.gamerName;
-          // currentState.currentGame.jugadaVisitor.online = currentState.online;
-
-          // currentState.currentGame.oponentID = currentState.userId;
           currentState.currentGame.jugadaLocal =
             lastGame.currentGame.jugadaLocal;
           currentState.currentGame.userId = lastGame.currentGame.userId;
           currentState.visitor = true;
+          currentState.currentGame.jugadaVisitor.gamerName =
+            currentState.gamerName;
         }
+
         this.setState(currentState);
       } else {
         console.log("SALA VACIA");

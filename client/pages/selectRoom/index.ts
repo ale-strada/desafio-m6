@@ -20,9 +20,7 @@ class SelectRoomPage extends HTMLElement {
 
       state.accessToRoom(() => {
         state.listenRoom();
-        // state.pushGame(cs.currentGame);
       });
-
       Router.go("/instructions");
     });
   }

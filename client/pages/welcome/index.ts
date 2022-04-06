@@ -7,7 +7,6 @@ class WelcomePage extends HTMLElement {
     this.render();
     const form = this.querySelector(".ingreso");
     const singUp = this.querySelector(".button-sign-up");
-    const displayRoom = "none";
 
     const buttonNew = this.querySelector(".button-new");
     const buttonGameRoom = this.querySelector(".button-gameroom");
@@ -23,11 +22,6 @@ class WelcomePage extends HTMLElement {
       console.log("room conocido");
       Router.go("/selectRoom");
     });
-
-    // singUp.addEventListener("click", (e) => {
-    //   e.preventDefault();
-    //   Router.go("/signUp");
-    // });
   }
 
   render() {

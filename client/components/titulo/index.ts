@@ -5,7 +5,7 @@ export function initTitle() {
       this.render();
     }
     render() {
-      const textoOriginal = this.textContent;
+      const textoOriginal = this.innerHTML;
       var style = document.createElement("style");
       style.textContent = `
         .title{
@@ -25,7 +25,7 @@ export function initTitle() {
 
       var h1 = document.createElement("h1");
       h1.classList.add("title");
-      h1.textContent = textoOriginal;
+      h1.innerHTML = textoOriginal;
       shadow.appendChild(h1);
     }
   }
