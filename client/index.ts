@@ -15,6 +15,8 @@ import { initCountdown } from "./components/countdown";
 
 (function () {
   state.init();
+  console.log("INIT");
+
   initTitle();
   initButton();
   initManos();

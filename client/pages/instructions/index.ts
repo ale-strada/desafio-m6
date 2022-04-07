@@ -17,7 +17,7 @@ class InstrictionsPage extends HTMLElement {
       const cs = state.getState();
       this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
       this.roomId = cs.roomId;
-      this.start = cs.currentGame.jugadaLocal.start;
+      this.start = false;
       this.visitor = cs.visitor;
       if (cs.visitor) {
         this.visit = cs.gamerName;
@@ -26,6 +26,16 @@ class InstrictionsPage extends HTMLElement {
       }
       this.render();
     });
+    // const cs = state.getState();
+    // this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
+    // this.roomId = cs.roomId;
+    // this.start = false;
+    // this.visitor = cs.visitor;
+    // if (cs.visitor) {
+    //   this.visit = cs.gamerName;
+    // } else {
+    //   this.visit = cs.currentGame.jugadaVisitor.gamerName;
+    // }
     this.render();
   }
   addListenerts() {
@@ -107,7 +117,7 @@ class InstrictionsPage extends HTMLElement {
       <div class="header">
         <div class="players-conteiner">
             <div class="player">${this.localPlayer}</div>
-            <div class="player visitor">${this.visit}</div>
+            <div class="player visitor">${this.visit || "oponente"}</div>
         </div>
         <div class="game-room-conteiner">
         <div class="player sala">Sala</div>

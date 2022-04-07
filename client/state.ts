@@ -3,16 +3,6 @@ import { rtdb, ref, onValue } from "./rtdb";
 import map from "lodash/map";
 
 const state = {
-  // data: {
-  //   gamerName: "",
-  //   userId: "",
-  //   roomId: "",
-  //   rtdbRoomId: "",
-  //   online: false,
-  //   start: false,
-  //   games: [],
-  //   oponentGames: [],
-  // },
   data: {
     visitor: false,
     userId: "",

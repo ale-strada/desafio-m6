@@ -1,18 +1,26 @@
 import { json } from "body-parser";
+import { type } from "os";
 import { getLeadingCommentRanges, isJSDocEnumTag } from "typescript";
 import { state } from "../../state";
+import { Router } from "@vaadin/router";
 let imagen = require("url:../../img/fondo.png");
-
+type Game = {
+  gamerName: string;
+  choice: string;
+  online: boolean;
+  start: boolean;
+};
 class Gamepage extends HTMLElement {
   gamerName: string;
   start: boolean;
+  startVisitor: boolean;
   online: boolean;
   choice: string;
   localPlayer: string;
   visit: string;
   roomId: number;
   oponente: string;
-
+  jugada: Game;
   connectedCallback() {
     state.subscribe(() => {
       const cs = state.getState();
@@ -21,8 +29,14 @@ class Gamepage extends HTMLElement {
       this.roomId = cs.roomId;
       if (cs.visitor) {
         this.oponente = cs.currentGame.jugadaLocal.gamerName;
+        this.jugada = cs.currentGame.jugadaVisitor;
+        this.start = cs.currentGame.jugadaVisitor.start;
+        this.startVisitor = cs.currentGame.jugadaLocal.start;
       } else {
         this.oponente = cs.currentGame.jugadaVisitor.gamerName;
+        this.jugada = cs.currentGame.jugadaLocal;
+        this.start = cs.currentGame.jugadaLocal.start;
+        this.startVisitor = cs.currentGame.jugadaVisitor.start;
       }
 
       this.render();
@@ -37,42 +51,56 @@ class Gamepage extends HTMLElement {
     const piedra = this.querySelector(".piedra");
     const papel = this.querySelector(".papel");
     const tijera = this.querySelector(".tijera");
+    const game = this.querySelector(".game");
+    const esperando = this.querySelector(".esperando");
 
     boton.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      if (this.gamerName == cs.gamerName) {
-        console.log("si");
+      console.log(cs.currentGame);
+    });
+    volver.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cs = state.getState();
+      if (cs.visitor) {
+        cs.currentGame.jugadaVisitor.start = false;
+        cs.start = false;
+        console.log("VISITOR");
       } else {
-        console.log("VISITANTE");
+        cs.currentGame.jugadaLocal.start = false;
+        cs.start = false;
+        console.log("LOCAL SI");
       }
       state.pushGame(cs.currentGame);
+      state.setState(cs);
+      console.log(cs);
+
+      Router.go("/instructions");
     });
-    // volver.addEventListener("click", (e) => {
-    //   e.preventDefault();
-    //   const cs = state.getState();
-    //   cs.games = [];
-    //   state.setState(cs);
-    // });
 
     piedra.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.start = false;
-      this.choice = "piedra";
+      this.jugada.choice = "piedra";
     });
     papel.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.start = false;
-      this.choice = "papel";
+      this.jugada.choice = "papel";
     });
     tijera.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      this.start = false;
-      this.choice = "tijera";
+      this.jugada.choice = "tijera";
     });
+
+    // (function esperandoOponente() {
+    //   console.log(this.start, this.startVisitor);
+
+    //   // if (this.start && this.startVisitor) {
+    //   //   console.log("ESTAN LOS DOS");
+    //   // }
+    // })();
   }
   render() {
     const cs = state.getState();
@@ -124,17 +152,21 @@ class Gamepage extends HTMLElement {
         <div class="game-room-conteiner">
         <div class="player sala">Sala</div>
         <div class="player">${this.roomId}</div>
+      </div>
+    </div>
+
+    <div class="game">
+        <titulo-comp>GAME</titulo-comp>
+        <button class="button">JUGAR</button>
+        <div>
+          <button class="piedra">PIE</button>
+          <button class="papel">PAP</button>
+          <button class="tijera">TIJ</button>
         </div>
-      </div>
-      <titulo-comp>GAME</titulo-comp>
-      <button class="button">JUGAR</button>
-      <div>
-      <button class="piedra">PIE</button>
-      <button class="papel">PAP</button>
-      <button class="tijera">TIJ</button>
-      </div>
-      <button class="button-volver">VOLVER</button>
-      <div class="esperando">
+        <button class="button-volver button">VOLVER</button>
+    </div>
+
+    <div class="esperando">
       <texto-comp>Esperando a que
         <span class="info-del-state">${this.oponente || "OPONENTE"}</span>
       presione ¡jugar!..</texto-comp>
