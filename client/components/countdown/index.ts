@@ -1,26 +1,24 @@
-
-import { state } from "../../state"
+import { state } from "../../state";
+import { Router } from "@vaadin/router";
 export function initCountdown() {
+  class Countdown extends HTMLElement {
+    shadow: ShadowRoot;
+    computerPlay: number;
+    myPlay: number;
+    countdown: string;
+    constructor() {
+      super();
+      this.shadow = this.attachShadow({ mode: "open" });
+      this.render();
+      state.subscribe(() => {
+        const currentState = state.getState();
+      });
+    }
 
-    class Countdown extends HTMLElement {
-        shadow:ShadowRoot
-        computerPlay:number 
-        myPlay:number
-        countdown:string
-        constructor() {
-            super();
-            this.shadow = this.attachShadow({ mode: 'open' }); 
-            this.render()
-            state.subscribe(()=>{
-                const currentState = state.getState()
-            })
-            
-        }
-
-        render() {
-            const textoOriginal = this.textContent;
-            var style = document.createElement("style");
-            style.textContent = `
+    render() {
+      const textoOriginal = this.textContent;
+      var style = document.createElement("style");
+      style.textContent = `
         
         .countdown-conteiner{
             margin:0px auto;
@@ -50,8 +48,7 @@ export function initCountdown() {
         }
         `;
 
-     this.shadow.innerHTML =
-        `
+      this.shadow.innerHTML = `
             
             
         <div class="countdown-conteiner">
@@ -59,34 +56,47 @@ export function initCountdown() {
         </div>
             
         `;
-        const lastState = state.getState()
-        
-        let inicio = 4
-        const intervalo = setInterval (()=>{
-             inicio --
-             this.shadow.querySelector(".countdown").textContent = inicio.toString()
-             if(inicio === 0){
-            clearInterval(intervalo) 
-            this.shadow.querySelector(".countdown").remove()
-            this.shadow.querySelector(".countdown-conteiner").remove()
-            const button = document.createElement("div")
-            button.innerHTML = `
-            <button-comp class= "button">Reiniciar</button-comp>
-            `
-            button.addEventListener("click",(e)=>{
-             e.preventDefault()
-            
-            location.reload()
-            })
-            this.shadow.appendChild(button)
-             }   
-             return inicio
-         },1000) 
+      const lastState = state.getState();
 
-    this.shadow.appendChild(style);
+      let inicio = 4;
+      const intervalo = setInterval(() => {
+        inicio--;
+        this.shadow.querySelector(".countdown").textContent = inicio.toString();
 
+        if (inicio === 0) {
+          clearInterval(intervalo);
+          Router.go("/score");
+
+          // this.shadow.querySelector(".countdown").remove();
+          // this.shadow.querySelector(".countdown-conteiner").remove();
+          // const button = document.createElement("div");
+          // button.innerHTML = `
+          //     <button-comp class= "button">Volver</button-comp>
+          //     `;
+          // button.addEventListener("click", (e) => {
+          //   e.preventDefault();
+          //   const cs = state.getState();
+          //   if (cs.visitor) {
+          //     cs.currentGame.jugadaVisitor.start = false;
+          //     cs.start = false;
+          //   } else {
+          //     cs.currentGame.jugadaLocal.start = false;
+          //     cs.start = false;
+          //   }
+          //   state.pushGame(cs.currentGame);
+          //   state.setState(cs);
+
+          //   Router.go("/instructions");
+          //   // location.reload()
+          // });
+          // this.shadow.appendChild(button);
         }
-    }
+        return inicio;
+      }, 1000);
 
-    customElements.define('countdown-comp', Countdown);
+      this.shadow.appendChild(style);
+    }
+  }
+
+  customElements.define("countdown-comp", Countdown);
 }

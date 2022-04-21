@@ -14,13 +14,13 @@ class WelcomePage extends HTMLElement {
     buttonNew.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
-      cs.currentGame.jugadaVisitor = {
-        choice: "",
-        gamerName: "",
-        online: false,
-        start: false,
-      };
-      state.setState(cs);
+      // cs.currentGame.jugadaVisitor = {
+      //   choice: "",
+      //   gamerName: "",
+      //   online: false,
+      //   start: false,
+      // };
+      // state.setState(cs);
       console.log("new game");
       Router.go("/selectPlayers");
     });

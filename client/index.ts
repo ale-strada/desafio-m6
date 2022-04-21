@@ -4,6 +4,7 @@ import "./pages/selectRoom";
 import "./pages/selectPlayers";
 import "./pages/instructions";
 import "./pages/play";
+import "./pages/score";
 import "./router";
 import { state } from "./state";
 import { initTitle } from "./components/titulo";

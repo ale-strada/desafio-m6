@@ -8,4 +8,5 @@ router.setRoutes([
   { path: "/instructions", component: "instructions-page" },
   { path: "/selectPlayers", component: "select-players-page" },
   { path: "/game", component: "game-page" },
+  { path: "/score", component: "score-page" },
 ]);

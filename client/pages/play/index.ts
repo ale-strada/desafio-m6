@@ -4,6 +4,7 @@ import { getLeadingCommentRanges, isJSDocEnumTag } from "typescript";
 import { state } from "../../state";
 import { Router } from "@vaadin/router";
 let imagen = require("url:../../img/fondo.png");
+
 type Game = {
   gamerName: string;
   choice: string;
@@ -21,6 +22,7 @@ class Gamepage extends HTMLElement {
   roomId: number;
   oponente: string;
   jugada: Game;
+
   connectedCallback() {
     state.subscribe(() => {
       const cs = state.getState();
@@ -46,61 +48,36 @@ class Gamepage extends HTMLElement {
   }
 
   addListenerts() {
-    const boton = this.querySelector(".button");
     const volver = this.querySelector(".button-volver");
-    const piedra = this.querySelector(".piedra");
-    const papel = this.querySelector(".papel");
-    const tijera = this.querySelector(".tijera");
     const game = this.querySelector(".game");
     const esperando = this.querySelector(".esperando");
 
-    boton.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      console.log(cs.currentGame);
-    });
+    (() => {
+      if (this.start && this.startVisitor) {
+        esperando.classList.add("none");
+        game.innerHTML = `
+        <countdown-comp></countdown-comp>
+        <manos-play></manos-play>
+        `;
+      } else {
+        game.classList.add("none");
+        esperando.classList.remove("none");
+      }
+    })();
     volver.addEventListener("click", (e) => {
       e.preventDefault();
       const cs = state.getState();
       if (cs.visitor) {
         cs.currentGame.jugadaVisitor.start = false;
         cs.start = false;
-        console.log("VISITOR");
       } else {
         cs.currentGame.jugadaLocal.start = false;
         cs.start = false;
-        console.log("LOCAL SI");
       }
       state.pushGame(cs.currentGame);
       state.setState(cs);
-      console.log(cs);
-
       Router.go("/instructions");
     });
-
-    piedra.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      this.jugada.choice = "piedra";
-    });
-    papel.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      this.jugada.choice = "papel";
-    });
-    tijera.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      this.jugada.choice = "tijera";
-    });
-
-    // (function esperandoOponente() {
-    //   console.log(this.start, this.startVisitor);
-
-    //   // if (this.start && this.startVisitor) {
-    //   //   console.log("ESTAN LOS DOS");
-    //   // }
-    // })();
   }
   render() {
     const cs = state.getState();
@@ -155,22 +132,15 @@ class Gamepage extends HTMLElement {
       </div>
     </div>
 
-    <div class="game">
-        <titulo-comp>GAME</titulo-comp>
-        <button class="button">JUGAR</button>
-        <div>
-          <button class="piedra">PIE</button>
-          <button class="papel">PAP</button>
-          <button class="tijera">TIJ</button>
-        </div>
-        <button class="button-volver button">VOLVER</button>
-    </div>
+    <div class="game"></div>
 
     <div class="esperando">
       <texto-comp>Esperando a que
         <span class="info-del-state">${this.oponente || "OPONENTE"}</span>
-      presione ¡jugar!..</texto-comp>
+      presione ¡jugar!..</texto-comp> 
+      <button class="button-volver button">VOLVER</button>
     </div>
+
       `;
 
     this.addListenerts();

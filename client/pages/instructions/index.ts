@@ -26,16 +26,6 @@ class InstrictionsPage extends HTMLElement {
       }
       this.render();
     });
-    // const cs = state.getState();
-    // this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
-    // this.roomId = cs.roomId;
-    // this.start = false;
-    // this.visitor = cs.visitor;
-    // if (cs.visitor) {
-    //   this.visit = cs.gamerName;
-    // } else {
-    //   this.visit = cs.currentGame.jugadaVisitor.gamerName;
-    // }
     this.render();
   }
   addListenerts() {
