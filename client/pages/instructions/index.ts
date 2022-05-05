@@ -9,31 +9,65 @@ class InstrictionsPage extends HTMLElement {
   visit: string;
   roomId: number;
   start: boolean;
+  startVisitor: boolean;
   visitor: boolean;
   oponentName: string;
 
   connectedCallback() {
+    const cs = state.getState();
+    this.localPlayer = cs.gamerName;
+    if (cs.roomId === 1210) {
+      this.roomId = 1210;
+      this.startVisitor = true;
+      this.oponentName = "PC";
+      this.visit = "PC";
+    }
     state.subscribe(() => {
       const cs = state.getState();
       this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
       this.roomId = cs.roomId;
-      this.start = false;
       this.visitor = cs.visitor;
       if (cs.visitor) {
         this.visit = cs.gamerName;
+        this.start = cs.currentGame.jugadaVisitor.start;
+        this.startVisitor = cs.currentGame.jugadaLocal.start;
+        this.oponentName = cs.currentGame.jugadaLocal.gamerName;
       } else {
         this.visit = cs.currentGame.jugadaVisitor.gamerName;
+        this.start = cs.currentGame.jugadaLocal.start;
+        this.startVisitor = cs.currentGame.jugadaVisitor.start;
+        this.oponentName = cs.currentGame.jugadaVisitor.gamerName;
       }
+
       this.render();
     });
     this.render();
   }
   addListenerts() {
     const cs = state.getState();
-
     const codigoSala = this.querySelector(".codigo");
     const instruccionFinal = this.querySelector(".instruccion-final");
     const button = this.querySelector(".button-new");
+    const buttonSalir = this.querySelector(".button-salir");
+    const esperando = this.querySelector(".esperando");
+    const instucctions = this.querySelector(".instructions-conteiner");
+
+    (() => {
+      if (this.start && this.startVisitor) {
+        // ambos start
+        Router.go("/game");
+      } else if (this.start) {
+        // start solo yo
+        instucctions.classList.add("none");
+        esperando.innerHTML = `
+        <texto-comp>Esperando a que
+        <span class="info-del-state">${this.oponentName || "OPONENTE"}</span>
+        presione ¡jugar!..</texto-comp> 
+        `;
+      } else {
+        esperando.innerHTML = ``;
+      }
+    })();
 
     button.addEventListener("click", () => {
       const cs = state.getState();
@@ -43,8 +77,29 @@ class InstrictionsPage extends HTMLElement {
       } else {
         cs.currentGame.jugadaLocal.start = this.start;
       }
+      state.setState(cs);
       state.pushGame(cs.currentGame);
-      Router.go("/game");
+    });
+
+    buttonSalir.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cs = state.getState();
+      if (cs.visitor) {
+        cs.currentGame.jugadaVisitor.start = false;
+        cs.currentGame.jugadaVisitor.online = false;
+        cs.currentGame.jugadaVisitor.choice = "";
+        cs.start = false;
+        cs.online = false;
+      } else {
+        cs.currentGame.jugadaLocal.start = false;
+        cs.currentGame.jugadaLocal.online = false;
+        cs.currentGame.jugadaLocal.choice = "";
+        cs.start = false;
+        cs.online = false;
+      }
+      state.pushGame(cs.currentGame);
+      state.setState(cs);
+      Router.go("/");
     });
 
     (function ocultarCodigo() {
@@ -55,7 +110,6 @@ class InstrictionsPage extends HTMLElement {
       }, 6000);
     })();
 
-    // const cs = state.getState();
     if (this.visitor) {
       cs.currentGame.jugadaVisitor.gamerName = cs.gamerName;
       cs.currentGame.jugadaVisitor.online = cs.online;
@@ -115,18 +169,25 @@ class InstrictionsPage extends HTMLElement {
         </div>
       </div>
     <titulo-comp>Piedra Papel ó Tijeras</titulo-comp>
-    <texto-comp class="codigo">Compartí el codigo:
-    <span class="info-del-state">${this.roomId}</span>
-     con tu contrincante. </texto-comp>
-    <texto-comp class="instruccion-final">Presioná jugar
-    y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.
-    </texto-comp>
+
+    <div class="instructions-conteiner">
+      <texto-comp class="codigo">Compartí el codigo:
+      <span class="info-del-state">${this.roomId || ""}</span>
+      con tu contrincante. </texto-comp>
+      <texto-comp class="instruccion-final">Presioná jugar
+      y elegí: piedra, papel o tijera antes de que pasen los 3 segundos.
+      </texto-comp>
     
-    <div class="button-new">
-    <button-comp class="button-jugar">¡Jugar!</button-comp>
+      <div class="button-new">
+        <button-comp class="button-jugar">¡Jugar!</button-comp>
+      </div>
+      
+        <button-comp class="button-salir">Salir del juego</button-comp>
+      
+    
+      <manos-comp></manos-comp>
     </div>
-    
-    <manos-comp></manos-comp>
+    <div class="esperando"></div>
 
     </div>
     `;

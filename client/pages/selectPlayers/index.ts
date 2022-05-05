@@ -11,16 +11,20 @@ class SelectPlayersPage extends HTMLElement {
 
     buttonOnePlayer.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("1 player");
       const cs = state.getState();
       cs.currentGame.jugadaLocal.online = true;
       cs.online = true;
+      cs.currentGame.jugadaVisitor.gamerName = "PC";
+      cs.currentGame.jugadaVisitor.online = true;
+      cs.currentGame.jugadaVisitor.start = true;
+      cs.roomId = 1210;
+      localStorage.setItem("room-1210", JSON.stringify(state.getState()));
       state.setState(cs);
+
       Router.go("/instructions");
     });
     buttonTwoPlayers.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("2 player");
       const cs = state.getState();
       cs.currentGame.jugadaLocal.online = true;
       cs.online = true;
@@ -30,6 +34,7 @@ class SelectPlayersPage extends HTMLElement {
           state.listenRoom();
         });
       });
+      state.pushGame(cs.currentGame);
       Router.go("/instructions");
     });
   }

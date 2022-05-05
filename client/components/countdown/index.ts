@@ -19,41 +19,46 @@ export function initCountdown() {
       const textoOriginal = this.textContent;
       var style = document.createElement("style");
       style.textContent = `
-        
+        .conteiner{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 100px auto;
+          width: 300px;
+          height: 300px;
+        }
         .countdown-conteiner{
-            margin:0px auto;
-             width: 200px;
-             height: 200px;
-             border: solid 20px;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-             border-radius: 50%;
-            background: with;
-            margin-top:150px;
-            margin-bottom:50px;
-            display:flex;
-            justify-content: center;
-            align-item:center;
+          margin: 0px auto;
+          width: 200px;
+          height: 200px;
+          border: solid 20px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          padding: 15px;
+          border-right-color: #888;
+          -webkit-animation: rotate 1s infinite linear;
+          position: absolute;
         }
         .countdown{
             font-size: 160px; 
             font-family: "Source Serif Pro";
             margin:0;
+            position: absolute;
         }
-        .button{
-            margin:100px auto;
-            display: flex;
-            justify-content: center;
-            align-item:center;
-        }
+        @-webkit-keyframes rotate {
+          100% {
+            -webkit-transform: rotate(360deg);
+          }
+        
         `;
 
       this.shadow.innerHTML = `
             
-            
-        <div class="countdown-conteiner">
-            <p class ="countdown"></p>
-        </div>
+      <div class = "conteiner">
+        <div class="countdown-conteiner"></div>
+        <p class="countdown"></p>
+      </div>
             
         `;
       const lastState = state.getState();
@@ -65,31 +70,8 @@ export function initCountdown() {
 
         if (inicio === 0) {
           clearInterval(intervalo);
+
           Router.go("/score");
-
-          // this.shadow.querySelector(".countdown").remove();
-          // this.shadow.querySelector(".countdown-conteiner").remove();
-          // const button = document.createElement("div");
-          // button.innerHTML = `
-          //     <button-comp class= "button">Volver</button-comp>
-          //     `;
-          // button.addEventListener("click", (e) => {
-          //   e.preventDefault();
-          //   const cs = state.getState();
-          //   if (cs.visitor) {
-          //     cs.currentGame.jugadaVisitor.start = false;
-          //     cs.start = false;
-          //   } else {
-          //     cs.currentGame.jugadaLocal.start = false;
-          //     cs.start = false;
-          //   }
-          //   state.pushGame(cs.currentGame);
-          //   state.setState(cs);
-
-          //   Router.go("/instructions");
-          //   // location.reload()
-          // });
-          // this.shadow.appendChild(button);
         }
         return inicio;
       }, 1000);

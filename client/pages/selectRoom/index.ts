@@ -21,6 +21,7 @@ class SelectRoomPage extends HTMLElement {
       state.accessToRoom(() => {
         state.listenRoom();
       });
+      state.pushGame(cs.currentGame);
       Router.go("/instructions");
     });
   }
@@ -32,9 +33,10 @@ class SelectRoomPage extends HTMLElement {
       background-repeat: round;
       padding-top: 115px;
       padding-bottom: 0px;
-      padding-left:auto;
-      padding-rigth:auto;
-      margin-bottom:0px
+      margin-bottom:0px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       }
     </style>
     <div class="conteiner">

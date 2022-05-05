@@ -28,8 +28,9 @@ const state = {
         start: false,
       },
     },
+    historial: [{ local: 0, visitante: 0 }],
   },
-  historial: [],
+
   listeners: [],
 
   init() {
@@ -42,7 +43,6 @@ const state = {
     const gameRef = ref(rtdb, "/rooms/" + cs.rtdbRoomId);
 
     onValue(gameRef, (snapshot) => {
-      const currentState = this.getState();
       const data = snapshot.val();
 
       const gamesList = map(data.currentGame);
@@ -52,6 +52,7 @@ const state = {
         const localGamer = currentState.currentGame.jugadaLocal.gamerName;
         const rtdbName = lastGame.currentGame.jugadaLocal.gamerName;
         const rtdbOnline = lastGame.currentGame.jugadaLocal.online;
+        currentState.historial = lastGame.historial;
         if (localGamer == rtdbName && rtdbOnline) {
           currentState.currentGame = lastGame.currentGame;
         } else {
@@ -82,6 +83,7 @@ const state = {
       },
       body: JSON.stringify({
         currentGame: currentGame,
+        historial: cs.historial,
         rtdbRoomId: cs.rtdbRoomId,
       }),
     });
@@ -99,6 +101,10 @@ const state = {
       cb();
     }
     localStorage.setItem("state", JSON.stringify(newState));
+    localStorage.setItem(
+      "save-history",
+      JSON.stringify(this.getState().historial)
+    );
     console.log("soy el state, he cambiado", this.getState());
   },
   signUp(callback?) {
@@ -194,6 +200,25 @@ const state = {
   },
   subscribe(callback: (any) => any) {
     this.listeners.push(callback);
+  },
+  result(currentState) {
+    let resultado;
+    if (currentState.miJugada === 2 && currentState.suJugada === 0) {
+      resultado = "perdiste";
+    } else if (currentState.miJugada === 0 && currentState.suJugada === 2) {
+      resultado = "ganaste";
+    } else if (currentState.miJugada === 3) {
+      resultado = "perdiste";
+    } else if (currentState.suJugada === 3) {
+      resultado = "ganaste";
+    } else if (currentState.miJugada > currentState.suJugada) {
+      resultado = "ganaste";
+    } else if (currentState.miJugada === currentState.suJugada) {
+      resultado = "empate";
+    } else {
+      resultado = "perdiste";
+    }
+    return resultado;
   },
 };
 export { state };
