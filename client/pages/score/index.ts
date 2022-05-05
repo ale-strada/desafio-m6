@@ -8,7 +8,7 @@ let tijera = require("url:../../img/tijera.png");
 let like = require("url:../../img/ICONO-LIKE.png");
 let starWin = require("../../img/star-ganaste.png");
 let starLose = require("../../img/star-perdiste.png");
-let empate = require("../../img/empate.jfif");
+let empate = require("../../img/star-empate2.png");
 
 class ScorePage extends HTMLElement {
   miJugada: number;
