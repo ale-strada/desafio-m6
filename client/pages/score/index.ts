@@ -1,13 +1,14 @@
 import { Router } from "@vaadin/router";
 import { state } from "../../state";
+
 let imagen = require("url:../../img/fondo.png");
 let piedra = require("url:../../img/piedra.png");
 let papel = require("url:../../img/papel.png");
 let tijera = require("url:../../img/tijera.png");
 let like = require("url:../../img/ICONO-LIKE.png");
-let starWin = require("url:../../img/star-ganaste.png");
-let starLose = require("url:../../img/star-perdiste.png");
-let empate = require("url:../../img/empate.jfif");
+let starWin = require("../../img/star-ganaste.png");
+let starLose = require("../../img/star-perdiste.png");
+let empate = require("../../img/empate.jfif");
 
 class ScorePage extends HTMLElement {
   miJugada: number;
