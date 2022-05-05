@@ -5,9 +5,9 @@ let piedra = require("url:../../img/piedra.png");
 let papel = require("url:../../img/papel.png");
 let tijera = require("url:../../img/tijera.png");
 let like = require("url:../../img/ICONO-LIKE.png");
-const starWin = require("url:../../img/star-ganaste.png");
-const starLose = require("url:../../img/star-perdiste.png");
-const empate = require("url:../../img/empate.jfif");
+let starWin = require("url:../../img/star-ganaste.png");
+let starLose = require("url:../../img/star-perdiste.png");
+let empate = require("url:../../img/empate.jfif");
 
 class ScorePage extends HTMLElement {
   miJugada: number;
