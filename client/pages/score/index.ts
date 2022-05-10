@@ -134,6 +134,9 @@ class ScorePage extends HTMLElement {
       } else if (result === "empate") {
         star = empate;
         conteiner.classList.add("empato");
+      } else if (result === "Oops!!!") {
+        star = empate;
+        conteiner.classList.add("empato");
       }
 
       miResultado.innerHTML = `
@@ -146,6 +149,9 @@ class ScorePage extends HTMLElement {
               <p class="score-yo">${yo}:${contador().Yo}</p>
               <p class="score-pc">${oponente}:${contador().Oponente}</p>
           </div>
+      `;
+      buttonGameRoom.innerHTML = `
+         <button-comp>volver</button-comp>
       `;
       buttonSalir.innerHTML = `
           <button-comp>Salir del jego</button-comp>
@@ -297,9 +303,7 @@ class ScorePage extends HTMLElement {
     </div>
     <div class = "resultados"></div>
     
-    <div class="button-gameroom">
-      <button-comp>volver</button-comp>
-    </div>
+    <div class="button-gameroom"></div>
     <div class="button-salir"></div>
   </div>
     

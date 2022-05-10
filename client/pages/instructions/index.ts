@@ -12,7 +12,7 @@ class InstrictionsPage extends HTMLElement {
   startVisitor: boolean;
   visitor: boolean;
   oponentName: string;
-
+  fullRoom: boolean;
   connectedCallback() {
     const cs = state.getState();
     this.localPlayer = cs.gamerName;
@@ -27,6 +27,8 @@ class InstrictionsPage extends HTMLElement {
       this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
       this.roomId = cs.roomId;
       this.visitor = cs.visitor;
+      this.fullRoom = cs.fullRoom;
+
       if (cs.visitor) {
         this.visit = cs.gamerName;
         this.start = cs.currentGame.jugadaVisitor.start;
@@ -66,6 +68,12 @@ class InstrictionsPage extends HTMLElement {
         `;
       } else {
         esperando.innerHTML = ``;
+      }
+    })();
+
+    (() => {
+      if (cs.fullRoom) {
+        Router.go("/");
       }
     })();
 

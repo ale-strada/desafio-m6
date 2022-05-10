@@ -1,6 +1,7 @@
 const API_BASE_URL = "";
 import { rtdb, ref, onValue } from "./rtdb";
 import map from "lodash/map";
+import { Router } from "express";
 
 const state = {
   data: {
@@ -11,7 +12,7 @@ const state = {
     gamerName: "",
     online: false,
     start: false,
-    choice: "",
+    fullRoom: false,
     currentGame: {
       userId: "",
       jugadaLocal: {
@@ -36,7 +37,6 @@ const state = {
   init() {
     const lastStorageState = localStorage.getItem("state");
     const cs = this.getState();
-    // state.setState(JSON.parse(lastStorageState));
   },
   listenRoom() {
     const cs = this.getState();
@@ -47,8 +47,16 @@ const state = {
 
       const gamesList = map(data.currentGame);
       const lastGame = gamesList[gamesList.length - 1];
+      // terminar de modificar para que identifique cuando hay un 3er jugador
       if (lastGame) {
+        console.log(limitaJugadores());
         const currentState = state.getState();
+        if (limitaJugadores()) {
+          currentState.fullRoom = false;
+        } else {
+          currentState.fullRoom = true;
+          window.alert("Sala Completa, elige la opcion 'nuevo Juego'");
+        }
         const localGamer = currentState.currentGame.jugadaLocal.gamerName;
         const rtdbName = lastGame.currentGame.jugadaLocal.gamerName;
         const rtdbOnline = lastGame.currentGame.jugadaLocal.online;
@@ -67,6 +75,27 @@ const state = {
         this.setState(currentState);
       } else {
         console.log("SALA VACIA");
+      }
+
+      function limitaJugadores() {
+        const cs = state.getState();
+        if (
+          lastGame.currentGame.jugadaLocal.gamerName === cs.gamerName ||
+          lastGame.currentGame.jugadaVisitor.gamerName === cs.gamerName
+        ) {
+          console.log("ES DE LA SALA");
+          return true;
+        } else if (
+          lastGame.currentGame.jugadaLocal.gamerName === "" ||
+          lastGame.currentGame.jugadaVisitor.gamerName === ""
+        ) {
+          console.log("SALA VACIA 2");
+
+          return true;
+        } else {
+          console.log("SALA COMPLETA");
+          return false;
+        }
       }
     });
   },
@@ -208,9 +237,9 @@ const state = {
     } else if (currentState.miJugada === 0 && currentState.suJugada === 2) {
       resultado = "ganaste";
     } else if (currentState.miJugada === 3) {
-      resultado = "perdiste";
+      resultado = "Oops!!!";
     } else if (currentState.suJugada === 3) {
-      resultado = "ganaste";
+      resultado = "Oops!!!";
     } else if (currentState.miJugada > currentState.suJugada) {
       resultado = "ganaste";
     } else if (currentState.miJugada === currentState.suJugada) {

@@ -4,7 +4,13 @@ let imagen = require("url:../../img/fondo.png");
 
 class Home extends HTMLElement {
   connectedCallback() {
+    const cs = state.getState();
+    if (cs.fullRoom) {
+      location.reload();
+    }
     this.render();
+  }
+  addListenerts() {
     const form = this.querySelector(".ingreso");
 
     form.addEventListener("submit", (e) => {
@@ -49,6 +55,7 @@ class Home extends HTMLElement {
         <manos-comp></manos-comp>
     </div>
     `;
+    this.addListenerts();
   }
 }
 
