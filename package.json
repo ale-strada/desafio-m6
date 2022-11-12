@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "license": "MIT",
   "type": "commonjs",
-  "engines": {
-    "node": "14.15.4",
-    "yarn": "1.22.10"
-  },
   "browserModern": "dist/index.html",
   "targets": {
     "browserModern": {
