@@ -5,10 +5,10 @@ let imagen = require("url:../../img/fondo.png");
 let piedra = require("url:../../img/piedra.png");
 let papel = require("url:../../img/papel.png");
 let tijera = require("url:../../img/tijera.png");
-let like = require("url:../../img/ICONO-LIKE.png");
-let starWin = require("../../img/Star-ganaste.png");
-let starLose = require("../../img/Star-perdiste.png");
-let empate = require("../../img/Star-empate2.png");
+let like = require("url:../../img/iconolike.png");
+let starWin = require("../../img/star-ganaste.png");
+let starLose = require("../../img/star-perdiste.png");
+let empate = require("../../img/star-empate.png");
 
 class ScorePage extends HTMLElement {
   miJugada: number;
@@ -48,11 +48,11 @@ class ScorePage extends HTMLElement {
     const cs = state.getState();
     let ultimoJuego = { miJugada: this.miJugada, suJugada: this.suJugada };
 
-    const buttonGameRoom = this.querySelector(".button-gameroom");
-    const buttonSalir = this.querySelector(".button-salir");
-    const ultimaJugada = this.querySelector(".conteiner-jugada");
-    const miResultado = this.querySelector(".resultados");
-    const conteiner = this.querySelector(".conteiner");
+    const buttonGameRoom: any = this.querySelector(".button-gameroom");
+    const buttonSalir: any = this.querySelector(".button-salir");
+    const ultimaJugada: any = this.querySelector(".conteiner-jugada");
+    const miResultado: any = this.querySelector(".resultados");
+    const conteiner: any = this.querySelector(".conteiner");
 
     (function mostrarJugada() {
       setTimeout(() => {
