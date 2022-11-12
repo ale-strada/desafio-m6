@@ -22,8 +22,7 @@
     "build": "yarn build:front && yarn build:api",
     "start": "node ./server/index.js",
     "ver": "yarn build:front && yarn dev:front",
-    "prob":"yarn build && yarn dev"
-
+    "prob": "yarn build && yarn dev"
   },
   "dependencies": {
     "@types/node": "17.0.5",
@@ -36,7 +35,7 @@
     "lodash": "^4.17.21",
     "nanoid": "^3.1.30",
     "nodemon": "^2.0.15",
-    "parcel": "^2.3.2",
+    "parcel": "^2.8.0",
     "typescript": "^4.6.2",
     "uuid": "^8.3.2"
   },
