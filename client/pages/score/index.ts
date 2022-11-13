@@ -6,8 +6,8 @@ let piedra = require("url:../../img/piedra.png");
 let papel = require("url:../../img/papel.png");
 let tijera = require("url:../../img/tijera.png");
 let like = require("url:../../img/iconolike.png");
-let starWin = require("../../img/star-ganaste.png");
-let starLose = require("../../img/star-perdiste.png");
+let starWin = require("../../img/star-ganaste1.png");
+let starLose = require("../../img/star-perdiste1.png");
 let empate = require("../../img/star-empate.png");
 
 class ScorePage extends HTMLElement {
