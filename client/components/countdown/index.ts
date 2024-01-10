@@ -67,11 +67,12 @@ export function initCountdown() {
             
         `;
 			const lastState = state.getState();
+			const countdown = this.shadow.querySelector(".countdown");
 
 			let inicio = 4;
 			const intervalo = setInterval(() => {
 				inicio--;
-				this.shadow.querySelector(".countdown").textContent = inicio.toString();
+				countdown && (countdown.textContent = inicio.toString());
 
 				if (inicio === 0) {
 					clearInterval(intervalo);
