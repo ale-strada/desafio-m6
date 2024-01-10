@@ -205,8 +205,9 @@ class ScorePage extends HTMLElement {
     .conteiner {
       background-image:url(${imagen});
       background-repeat: round;
-      height: 900px;
+      height: 100vh;
       margin-bottom:0px
+
       }
     .mano{
       width: 160px;
@@ -248,6 +249,11 @@ class ScorePage extends HTMLElement {
         justify-content: center;
         background-color: white;
     }
+	@media only screen and (max-width: 600px) {
+		.score {
+			margin: 30px auto;
+		}
+	}
     .score-title{
         align-self: center;
         font-family: "Odibee Sans";

@@ -10,10 +10,10 @@ export function initTitle() {
 			style.textContent = `
         .title{
             font-family: "Source Serif Pro";
-            font-size: 70px;
+            font-size: 80px;
             font-weight: normal;
             max-width: 600px;
-            margin: 30px auto;
+            margin: 50px auto;
             text-align: center;
             padding: 0px 20px;
             color: #009048
