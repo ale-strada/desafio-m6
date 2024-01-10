@@ -1,24 +1,24 @@
 import { state } from "../../state";
 import { Router } from "@vaadin/router";
 export function initCountdown() {
-  class Countdown extends HTMLElement {
-    shadow: ShadowRoot;
-    computerPlay: number;
-    myPlay: number;
-    countdown: string;
-    constructor() {
-      super();
-      this.shadow = this.attachShadow({ mode: "open" });
-      this.render();
-      state.subscribe(() => {
-        const currentState = state.getState();
-      });
-    }
+	class Countdown extends HTMLElement {
+		shadow: ShadowRoot;
+		computerPlay: number;
+		myPlay: number;
+		countdown: string;
+		constructor() {
+			super();
+			this.shadow = this.attachShadow({ mode: "open" });
+			this.render();
+			state.subscribe(() => {
+				const currentState = state.getState();
+			});
+		}
 
-    render() {
-      const textoOriginal = this.textContent;
-      var style = document.createElement("style");
-      style.textContent = `
+		render() {
+			const textoOriginal = this.textContent;
+			var style = document.createElement("style");
+			style.textContent = `
         .conteiner{
           display: flex;
           justify-content: center;
@@ -26,6 +26,11 @@ export function initCountdown() {
           margin: 100px auto;
           width: 300px;
           height: 300px;
+        }
+        @media (max-width: 600px) {
+          .conteiner {
+            margin: 30px auto;
+          }
         }
         .countdown-conteiner{
           margin: 0px auto;
@@ -53,7 +58,7 @@ export function initCountdown() {
         
         `;
 
-      this.shadow.innerHTML = `
+			this.shadow.innerHTML = `
             
       <div class = "conteiner">
         <div class="countdown-conteiner"></div>
@@ -61,24 +66,24 @@ export function initCountdown() {
       </div>
             
         `;
-      const lastState = state.getState();
+			const lastState = state.getState();
 
-      let inicio = 4;
-      const intervalo = setInterval(() => {
-        inicio--;
-        this.shadow.querySelector(".countdown").textContent = inicio.toString();
+			let inicio = 4;
+			const intervalo = setInterval(() => {
+				inicio--;
+				this.shadow.querySelector(".countdown").textContent = inicio.toString();
 
-        if (inicio === 0) {
-          clearInterval(intervalo);
+				if (inicio === 0) {
+					clearInterval(intervalo);
 
-          Router.go("/score");
-        }
-        return inicio;
-      }, 1000);
+					Router.go("/score");
+				}
+				return inicio;
+			}, 1000);
 
-      this.shadow.appendChild(style);
-    }
-  }
+			this.shadow.appendChild(style);
+		}
+	}
 
-  customElements.define("countdown-comp", Countdown);
+	customElements.define("countdown-comp", Countdown);
 }

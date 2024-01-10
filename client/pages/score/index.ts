@@ -11,135 +11,135 @@ let starLose = require("../../img/star-perdiste1.png");
 let empate = require("../../img/star-empate.png");
 
 class ScorePage extends HTMLElement {
-  miJugada: number;
-  suJugada: number;
-  yo: string;
-  oponente: string;
+	miJugada: number;
+	suJugada: number;
+	yo: string;
+	oponente: string;
 
-  connectedCallback() {
-    const cs = state.getState();
+	connectedCallback() {
+		const cs = state.getState();
 
-    let jugadas = ["piedra", "papel", "tijera", ""];
+		let jugadas = ["piedra", "papel", "tijera", ""];
 
-    if (cs.visitor) {
-      this.miJugada = jugadas.findIndex(
-        (j) => j === cs.currentGame.jugadaVisitor.choice
-      );
-      this.suJugada = jugadas.findIndex(
-        (j) => j === cs.currentGame.jugadaLocal.choice
-      );
-    } else {
-      this.miJugada = jugadas.findIndex(
-        (j) => j === cs.currentGame.jugadaLocal.choice
-      );
-      this.suJugada = jugadas.findIndex(
-        (j) => j === cs.currentGame.jugadaVisitor.choice
-      );
+		if (cs.visitor) {
+			this.miJugada = jugadas.findIndex(
+				(j) => j === cs.currentGame.jugadaVisitor.choice
+			);
+			this.suJugada = jugadas.findIndex(
+				(j) => j === cs.currentGame.jugadaLocal.choice
+			);
+		} else {
+			this.miJugada = jugadas.findIndex(
+				(j) => j === cs.currentGame.jugadaLocal.choice
+			);
+			this.suJugada = jugadas.findIndex(
+				(j) => j === cs.currentGame.jugadaVisitor.choice
+			);
 
-      if (cs.roomId === 1210) {
-        this.suJugada = Math.floor(Math.random() * 3);
-      }
-    }
+			if (cs.roomId === 1210) {
+				this.suJugada = Math.floor(Math.random() * 3);
+			}
+		}
 
-    this.render();
-  }
+		this.render();
+	}
 
-  addListenerts() {
-    const cs = state.getState();
-    let ultimoJuego = { miJugada: this.miJugada, suJugada: this.suJugada };
+	addListenerts() {
+		const cs = state.getState();
+		let ultimoJuego = { miJugada: this.miJugada, suJugada: this.suJugada };
 
-    const buttonGameRoom: any = this.querySelector(".button-gameroom");
-    const buttonSalir: any = this.querySelector(".button-salir");
-    const ultimaJugada: any = this.querySelector(".conteiner-jugada");
-    const miResultado: any = this.querySelector(".resultados");
-    const conteiner: any = this.querySelector(".conteiner");
+		const buttonGameRoom: any = this.querySelector(".button-gameroom");
+		const buttonSalir: any = this.querySelector(".button-salir");
+		const ultimaJugada: any = this.querySelector(".conteiner-jugada");
+		const miResultado: any = this.querySelector(".resultados");
+		const conteiner: any = this.querySelector(".conteiner");
 
-    (function mostrarJugada() {
-      setTimeout(() => {
-        finDelJuego(ultimoJuego);
-      }, 2000);
-    })();
+		(function mostrarJugada() {
+			setTimeout(() => {
+				finDelJuego(ultimoJuego);
+			}, 2000);
+		})();
 
-    buttonSalir.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      if (cs.visitor) {
-        cs.currentGame.jugadaVisitor.start = false;
-        cs.currentGame.jugadaVisitor.choice = "";
-        cs.start = false;
-      } else {
-        cs.currentGame.jugadaLocal.start = false;
-        cs.currentGame.jugadaLocal.choice = "";
-        cs.start = false;
-      }
-      state.pushGame(cs.currentGame);
-      state.setState(cs);
-      Router.go("/");
-    });
+		buttonSalir.addEventListener("click", (e) => {
+			e.preventDefault();
+			const cs = state.getState();
+			if (cs.visitor) {
+				cs.currentGame.jugadaVisitor.start = false;
+				cs.currentGame.jugadaVisitor.choice = "";
+				cs.start = false;
+			} else {
+				cs.currentGame.jugadaLocal.start = false;
+				cs.currentGame.jugadaLocal.choice = "";
+				cs.start = false;
+			}
+			state.pushGame(cs.currentGame);
+			state.setState(cs);
+			Router.go("/");
+		});
 
-    buttonGameRoom.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      if (cs.visitor) {
-        cs.currentGame.jugadaVisitor.start = false;
-        cs.currentGame.jugadaVisitor.choice = "";
-        cs.start = false;
-      } else {
-        cs.currentGame.jugadaLocal.start = false;
-        cs.currentGame.jugadaLocal.choice = "";
-        cs.start = false;
-      }
-      state.pushGame(cs.currentGame);
-      state.setState(cs);
-      Router.go("/instructions");
-    });
+		buttonGameRoom.addEventListener("click", (e) => {
+			e.preventDefault();
+			const cs = state.getState();
+			if (cs.visitor) {
+				cs.currentGame.jugadaVisitor.start = false;
+				cs.currentGame.jugadaVisitor.choice = "";
+				cs.start = false;
+			} else {
+				cs.currentGame.jugadaLocal.start = false;
+				cs.currentGame.jugadaLocal.choice = "";
+				cs.start = false;
+			}
+			state.pushGame(cs.currentGame);
+			state.setState(cs);
+			Router.go("/instructions");
+		});
 
-    function pushHistorial(ultimoJuego) {
-      const cs = state.getState();
-      const juego = {
-        local: 0,
-        visitante: 0,
-      };
-      if (cs.visitor) {
-        (juego.visitante = ultimoJuego.miJugada),
-          (juego.local = ultimoJuego.suJugada);
-      } else {
-        (juego.visitante = ultimoJuego.suJugada),
-          (juego.local = ultimoJuego.miJugada);
-      }
-      state.data.historial.push(juego);
-    }
+		function pushHistorial(ultimoJuego) {
+			const cs = state.getState();
+			const juego = {
+				local: 0,
+				visitante: 0,
+			};
+			if (cs.visitor) {
+				(juego.visitante = ultimoJuego.miJugada),
+					(juego.local = ultimoJuego.suJugada);
+			} else {
+				(juego.visitante = ultimoJuego.suJugada),
+					(juego.local = ultimoJuego.miJugada);
+			}
+			state.data.historial.push(juego);
+		}
 
-    function finDelJuego(ultimoJuego) {
-      const cs = state.getState();
-      let yo;
-      let oponente;
-      if (cs.visitor) {
-        yo = cs.currentGame.jugadaVisitor.gamerName;
-        oponente = cs.currentGame.jugadaLocal.gamerName;
-      } else {
-        yo = cs.currentGame.jugadaLocal.gamerName;
-        oponente = cs.currentGame.jugadaVisitor.gamerName;
-      }
-      ultimaJugada.classList.add("final");
-      pushHistorial(ultimoJuego);
-      let result = state.result(ultimoJuego);
-      let star;
-      if (result === "ganaste") {
-        star = starWin;
-        conteiner.classList.add("gano");
-      } else if (result === "perdiste") {
-        star = starLose;
-        conteiner.classList.add("perdio");
-      } else if (result === "empate") {
-        star = empate;
-        conteiner.classList.add("empato");
-      } else if (result === "Oops!!!") {
-        star = empate;
-        conteiner.classList.add("empato");
-      }
+		function finDelJuego(ultimoJuego) {
+			const cs = state.getState();
+			let yo;
+			let oponente;
+			if (cs.visitor) {
+				yo = cs.currentGame.jugadaVisitor.gamerName;
+				oponente = cs.currentGame.jugadaLocal.gamerName;
+			} else {
+				yo = cs.currentGame.jugadaLocal.gamerName;
+				oponente = cs.currentGame.jugadaVisitor.gamerName;
+			}
+			ultimaJugada.classList.add("final");
+			pushHistorial(ultimoJuego);
+			let result = state.result(ultimoJuego);
+			let star;
+			if (result === "ganaste") {
+				star = starWin;
+				conteiner.classList.add("gano");
+			} else if (result === "perdiste") {
+				star = starLose;
+				conteiner.classList.add("perdio");
+			} else if (result === "empate") {
+				star = empate;
+				conteiner.classList.add("empato");
+			} else if (result === "Oops!!!") {
+				star = empate;
+				conteiner.classList.add("empato");
+			}
 
-      miResultado.innerHTML = `
+			miResultado.innerHTML = `
           <div class="star">
           <img class="fin" src=${star}>
           <h2 class="resultado-title">${result}</h2>
@@ -150,56 +150,57 @@ class ScorePage extends HTMLElement {
               <p class="score-pc">${oponente}:${contador().Oponente}</p>
           </div>
       `;
-      buttonGameRoom.innerHTML = `
+			buttonGameRoom.innerHTML = `
          <button-comp>volver</button-comp>
       `;
-      buttonSalir.innerHTML = `
+			buttonSalir.innerHTML = `
           <button-comp>Salir del jego</button-comp>
       `;
-    }
+		}
 
-    function contador() {
-      const cs = state.getState();
-      const score = {
-        Yo: 0,
-        Oponente: 0,
-      };
-      for (const partidas of cs.historial) {
-        let ultimoJuego = {
-          miJugada: 0,
-          suJugada: 0,
-        };
-        if (cs.visitor) {
-          (ultimoJuego.miJugada = partidas.visitante),
-            (ultimoJuego.suJugada = partidas.local);
-        } else {
-          (ultimoJuego.suJugada = partidas.visitante),
-            (ultimoJuego.miJugada = partidas.local);
-        }
+		function contador() {
+			const cs = state.getState();
+			const score = {
+				Yo: 0,
+				Oponente: 0,
+			};
+			for (const partidas of cs.historial) {
+				let ultimoJuego = {
+					miJugada: 0,
+					suJugada: 0,
+				};
+				if (cs.visitor) {
+					(ultimoJuego.miJugada = partidas.visitante),
+						(ultimoJuego.suJugada = partidas.local);
+				} else {
+					(ultimoJuego.suJugada = partidas.visitante),
+						(ultimoJuego.miJugada = partidas.local);
+				}
 
-        const resultado = state.result(ultimoJuego);
-        if (resultado === "ganaste") {
-          score.Yo++;
-        } else if (resultado === "perdiste") {
-          score.Oponente++;
-        }
-      }
-      return score;
-    }
-  }
+				const resultado = state.result(ultimoJuego);
+				if (resultado === "ganaste") {
+					score.Yo++;
+				} else if (resultado === "perdiste") {
+					score.Oponente++;
+				}
+			}
+			return score;
+		}
+	}
 
-  render() {
-    const cs = state.getState();
-    let jugada = [piedra, papel, tijera, like];
-    this.innerHTML = `
+	render() {
+		const cs = state.getState();
+		let jugada = [piedra, papel, tijera, like];
+		this.innerHTML = `
     <style class="select-style" type="text/css">
     .none{
       display:none;
     }
     .final{
       position: absolute;
-      left: 40%;
+      left: 45%;
       z-index: -1;
+      height: 100vh;
     }
     .conteiner {
       background-image:url(${imagen});
@@ -221,12 +222,13 @@ class ScorePage extends HTMLElement {
       justify-content: center;
       }
     .mano-local{
-      position: relative;
+      position: absolute;
       bottom: 0px;
       margin:0px auto;
       display: flex;
       justify-content: center;
       padding-top: 50px;
+      width: 100%;
       }
       .fin{
         width: 250px;
@@ -311,8 +313,8 @@ class ScorePage extends HTMLElement {
 
     </div>
     `;
-    this.addListenerts();
-  }
+		this.addListenerts();
+	}
 }
 
 customElements.define("score-page", ScorePage);

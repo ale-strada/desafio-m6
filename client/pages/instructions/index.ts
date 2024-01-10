@@ -5,129 +5,132 @@ import { addListener } from "process";
 import { state } from "../../state";
 
 class InstrictionsPage extends HTMLElement {
-  localPlayer: string;
-  visit: string;
-  roomId: number;
-  start: boolean;
-  startVisitor: boolean;
-  visitor: boolean;
-  oponentName: string;
-  fullRoom: boolean;
-  connectedCallback() {
-    const cs = state.getState();
-    this.localPlayer = cs.gamerName;
-    if (cs.roomId === 1210) {
-      this.roomId = 1210;
-      this.startVisitor = true;
-      this.oponentName = "PC";
-      this.visit = "PC";
-    }
-    state.subscribe(() => {
-      const cs = state.getState();
-      this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
-      this.roomId = cs.roomId;
-      this.visitor = cs.visitor;
-      this.fullRoom = cs.fullRoom;
+	localPlayer: string;
+	visit: string;
+	roomId: number;
+	start: boolean;
+	startVisitor: boolean;
+	visitor: boolean;
+	oponentName: string;
+	fullRoom: boolean;
+	connectedCallback() {
+		const cs = state.getState();
+		this.localPlayer = cs.gamerName;
+		if (cs.roomId === 1210) {
+			this.roomId = 1210;
+			this.startVisitor = true;
+			this.oponentName = "PC";
+			this.visit = "PC";
+		}
+		state.subscribe(() => {
+			const cs = state.getState();
+			this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
+			this.roomId = cs.roomId;
+			this.visitor = cs.visitor;
+			this.fullRoom = cs.fullRoom;
 
-      if (cs.visitor) {
-        this.visit = cs.gamerName;
-        this.start = cs.currentGame.jugadaVisitor.start;
-        this.startVisitor = cs.currentGame.jugadaLocal.start;
-        this.oponentName = cs.currentGame.jugadaLocal.gamerName;
-      } else {
-        this.visit = cs.currentGame.jugadaVisitor.gamerName;
-        this.start = cs.currentGame.jugadaLocal.start;
-        this.startVisitor = cs.currentGame.jugadaVisitor.start;
-        this.oponentName = cs.currentGame.jugadaVisitor.gamerName;
-      }
+			if (cs.visitor) {
+				this.visit = cs.gamerName;
+				this.start = cs.currentGame.jugadaVisitor.start;
+				this.startVisitor = cs.currentGame.jugadaLocal.start;
+				this.oponentName = cs.currentGame.jugadaLocal.gamerName;
+			} else {
+				this.visit = cs.currentGame.jugadaVisitor.gamerName;
+				this.start = cs.currentGame.jugadaLocal.start;
+				this.startVisitor = cs.currentGame.jugadaVisitor.start;
+				this.oponentName = cs.currentGame.jugadaVisitor.gamerName;
+			}
 
-      this.render();
-    });
-    this.render();
-  }
-  addListenerts() {
-    const cs = state.getState();
-    const codigoSala = this.querySelector(".codigo");
-    const instruccionFinal = this.querySelector(".instruccion-final");
-    const button = this.querySelector(".button-new");
-    const buttonSalir = this.querySelector(".button-salir");
-    const esperando = this.querySelector(".esperando");
-    const instucctions = this.querySelector(".instructions-conteiner");
+			this.render();
+		});
+		this.render();
+	}
+	addListenerts() {
+		const cs = state.getState();
+		const codigoSala = this.querySelector(".codigo");
+		const instruccionFinal = this.querySelector(".instruccion-final");
+		const button = this.querySelector(".button-new");
+		const buttonSalir = this.querySelector(".button-salir");
+		const esperando = this.querySelector(".esperando");
+		const instucctions = this.querySelector(".instructions-conteiner");
 
-    (() => {
-      if (this.start && this.startVisitor) {
-        // ambos start
-        Router.go("/game");
-      } else if (this.start) {
-        // start solo yo
-        instucctions.classList.add("none");
-        esperando.innerHTML = `
+		(() => {
+			if (this.start && this.startVisitor) {
+				// ambos start
+				Router.go("/game");
+			} else if (this.start) {
+				// start solo yo
+				instucctions && instucctions.classList.add("none");
+				esperando &&
+					(esperando.innerHTML = `
         <texto-comp>Esperando a que
         <span class="info-del-state">${this.oponentName || "OPONENTE"}</span>
         presione ¡jugar!..</texto-comp> 
-        `;
-      } else {
-        esperando.innerHTML = ``;
-      }
-    })();
+        `);
+			} else {
+				esperando && (esperando.innerHTML = ``);
+			}
+		})();
 
-    (() => {
-      if (cs.fullRoom) {
-        Router.go("/");
-      }
-    })();
+		(() => {
+			if (cs.fullRoom) {
+				Router.go("/");
+			}
+		})();
 
-    button.addEventListener("click", () => {
-      const cs = state.getState();
-      this.start = true;
-      if (this.visitor) {
-        cs.currentGame.jugadaVisitor.start = this.start;
-      } else {
-        cs.currentGame.jugadaLocal.start = this.start;
-      }
-      state.setState(cs);
-      state.pushGame(cs.currentGame);
-    });
+		button &&
+			button.addEventListener("click", () => {
+				const cs = state.getState();
+				this.start = true;
+				if (this.visitor) {
+					cs.currentGame.jugadaVisitor.start = this.start;
+				} else {
+					cs.currentGame.jugadaLocal.start = this.start;
+				}
+				state.setState(cs);
+				state.pushGame(cs.currentGame);
+			});
 
-    buttonSalir.addEventListener("click", (e) => {
-      e.preventDefault();
-      const cs = state.getState();
-      if (cs.visitor) {
-        cs.currentGame.jugadaVisitor.start = false;
-        cs.currentGame.jugadaVisitor.online = false;
-        cs.currentGame.jugadaVisitor.choice = "";
-        cs.start = false;
-        cs.online = false;
-      } else {
-        cs.currentGame.jugadaLocal.start = false;
-        cs.currentGame.jugadaLocal.online = false;
-        cs.currentGame.jugadaLocal.choice = "";
-        cs.start = false;
-        cs.online = false;
-      }
-      state.pushGame(cs.currentGame);
-      state.setState(cs);
-      Router.go("/");
-    });
+		buttonSalir &&
+			buttonSalir.addEventListener("click", (e) => {
+				e.preventDefault();
+				const cs = state.getState();
+				if (cs.visitor) {
+					cs.currentGame.jugadaVisitor.start = false;
+					cs.currentGame.jugadaVisitor.online = false;
+					cs.currentGame.jugadaVisitor.choice = "";
+					cs.start = false;
+					cs.online = false;
+				} else {
+					cs.currentGame.jugadaLocal.start = false;
+					cs.currentGame.jugadaLocal.online = false;
+					cs.currentGame.jugadaLocal.choice = "";
+					cs.start = false;
+					cs.online = false;
+				}
+				state.pushGame(cs.currentGame);
+				state.setState(cs);
+				Router.go("/");
+			});
 
-    (function ocultarCodigo() {
-      instruccionFinal.classList.add("none");
-      setTimeout(() => {
-        codigoSala.classList.add("none");
-        instruccionFinal.classList.remove("none");
-      }, 6000);
-    })();
+		(function ocultarCodigo() {
+			instruccionFinal && instruccionFinal.classList.add("none");
+			setTimeout(() => {
+				codigoSala && codigoSala.classList.add("none");
+				instruccionFinal && instruccionFinal.classList.remove("none");
+			}, 6000);
+		})();
 
-    if (this.visitor) {
-      cs.currentGame.jugadaVisitor.gamerName = cs.gamerName;
-      cs.currentGame.jugadaVisitor.online = cs.online;
-      cs.currentGame.oponentID = cs.userId;
-      return cs;
-    }
-  }
+		if (this.visitor) {
+			cs.currentGame.jugadaVisitor.gamerName = cs.gamerName;
+			cs.currentGame.jugadaVisitor.online = cs.online;
+			cs.currentGame.oponentID = cs.userId;
+			return cs;
+		}
+	}
 
-  render() {
-    this.innerHTML = `
+	render() {
+		this.innerHTML = `
     <style class="select-style" type="text/css">
     .none{
       display:none;
@@ -135,11 +138,11 @@ class InstrictionsPage extends HTMLElement {
     .conteiner {
       background-image:url(${imagen});
       background-repeat: round;
-      padding-top: 115px;
+      padding-top: 30px;
       padding-bottom: 0px;
-      padding-left:auto;
-      padding-rigth:auto;
-      margin-bottom:0px
+      margin-bottom:0px;
+      height: 100vh;
+      
       }
       .header{
         display: flex;
@@ -164,6 +167,13 @@ class InstrictionsPage extends HTMLElement {
       .visitor{
         color: red;
       }
+      .manos-comp{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        margin: 0 auto;
+      }
+
     </style>
     <div class="conteiner">
       <div class="header">
@@ -176,7 +186,7 @@ class InstrictionsPage extends HTMLElement {
         <div class="player">${this.roomId}</div>
         </div>
       </div>
-    <titulo-comp>Piedra Papel ó Tijeras</titulo-comp>
+    <titulo-comp class="title">Piedra Papel ó Tijeras</titulo-comp>
 
     <div class="instructions-conteiner">
       <texto-comp class="codigo">Compartí el codigo:
@@ -193,14 +203,14 @@ class InstrictionsPage extends HTMLElement {
         <button-comp class="button-salir">Salir del juego</button-comp>
       
     
-      <manos-comp></manos-comp>
+      <manos-comp class="manos-comp"></manos-comp>
     </div>
     <div class="esperando"></div>
 
     </div>
     `;
-    this.addListenerts();
-  }
+		this.addListenerts();
+	}
 }
 
 customElements.define("instructions-page", InstrictionsPage);

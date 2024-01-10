@@ -6,22 +6,22 @@ import { Router } from "@vaadin/router";
 let imagen = require("url:../../img/fondo.png");
 
 class Gamepage extends HTMLElement {
-  localPlayer: string;
-  visit: string;
-  roomId: number;
+	localPlayer: string;
+	visit: string;
+	roomId: number;
 
-  connectedCallback() {
-    const cs = state.getState();
-    this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
-    this.visit = cs.currentGame.jugadaVisitor.gamerName;
-    this.roomId = cs.roomId;
+	connectedCallback() {
+		const cs = state.getState();
+		this.localPlayer = cs.currentGame.jugadaLocal.gamerName;
+		this.visit = cs.currentGame.jugadaVisitor.gamerName;
+		this.roomId = cs.roomId;
 
-    this.render();
-  }
+		this.render();
+	}
 
-  render() {
-    const cs = state.getState();
-    this.innerHTML = `
+	render() {
+		const cs = state.getState();
+		this.innerHTML = `
     <style class="select-style" type="text/css">
     .none{
       display:none;
@@ -29,11 +29,10 @@ class Gamepage extends HTMLElement {
     .conteiner {
       background-image:url(${imagen});
       background-repeat: round;
-      padding-top: 115px;
+      padding-top: 30px;
       padding-bottom: 0px;
-      padding-left:auto;
-      padding-rigth:auto;
-      margin-bottom:0px
+      margin-bottom:0px;
+      height: 100vh;
       }
       .header{
         display: flex;
@@ -79,7 +78,7 @@ class Gamepage extends HTMLElement {
       </div>
     </div>
       `;
-  }
+	}
 }
 
 customElements.define("game-page", Gamepage);

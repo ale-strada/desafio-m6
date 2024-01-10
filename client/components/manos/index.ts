@@ -1,29 +1,27 @@
-let piedra = require ("url:../../img/piedra.png")
-let papel = require ("url:../../img/papel.png")
-let tijera = require ("url:../../img/tijera.png")
+let piedra = require("url:../../img/piedra.png");
+let papel = require("url:../../img/papel.png");
+let tijera = require("url:../../img/tijera.png");
 export function initManos() {
+	class ManosComp extends HTMLElement {
+		shadow: ShadowRoot;
 
-    class ManosComp extends HTMLElement {
-        shadow:ShadowRoot
-       
-        constructor() {
-            super();
-            this.shadow = this.attachShadow({ mode: 'open' });
-            this.render()    
-        }
-        render() {
-           
-            var style = document.createElement("style");
-            style.textContent = `
+		constructor() {
+			super();
+			this.shadow = this.attachShadow({ mode: "open" });
+			this.render();
+		}
+		render() {
+			var style = document.createElement("style");
+			style.textContent = `
         
         .manos-conteiner{
             max-width: 300px;
             margin:0px auto;
             display: flex;
             justify-content: space-around;
-            height: 100px;
+            height: fit-content;
             position: relative;
-            bottom: -70px;
+            bottom: 0px;
         }
         .mano{
             width: 56px;
@@ -35,8 +33,7 @@ export function initManos() {
         }
         `;
 
-     this.shadow.innerHTML =
-        `
+			this.shadow.innerHTML = `
             
             
         <div class="manos-conteiner">
@@ -47,10 +44,9 @@ export function initManos() {
             
         `;
 
-    this.shadow.appendChild(style);
+			this.shadow.appendChild(style);
+		}
+	}
 
-        }
-    }
-
-    customElements.define('manos-comp', ManosComp);
+	customElements.define("manos-comp", ManosComp);
 }

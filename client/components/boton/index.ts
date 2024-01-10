@@ -1,18 +1,23 @@
 export function initButton() {
-  class ButtonComp extends HTMLElement {
-    constructor() {
-      super();
-      this.render();
-    }
-    render() {
-      const textoOriginal = this.textContent;
-      var style = document.createElement("style");
-      style.textContent = `
+	class ButtonComp extends HTMLElement {
+		constructor() {
+			super();
+			this.render();
+		}
+		render() {
+			const textoOriginal = this.textContent;
+			var style = document.createElement("style");
+			style.textContent = `
         .button-container{
             max-width: 560px;
             margin: 20px auto;
             padding: 0px 20px;
 
+        }
+        @media (max-width: 600px) {
+          .button-container {
+            max-width: 260px;
+          }
         }
         .button{
             background-color: #006CFC;
@@ -25,22 +30,28 @@ export function initButton() {
             border: solid 10px;
             border-color: #001997;
             border-radius: 5px;
-}
+        }
+        @media (max-width: 600px) {
+          .button {
+            font-size: 30px;
+          }
+        }
+
         }
         `;
-      var shadow = this.attachShadow({ mode: "open" });
-      shadow.appendChild(style);
+			var shadow = this.attachShadow({ mode: "open" });
+			shadow.appendChild(style);
 
-      var button = document.createElement("button");
-      button.classList.add("button");
-      button.textContent = textoOriginal;
+			var button = document.createElement("button");
+			button.classList.add("button");
+			button.textContent = textoOriginal;
 
-      var div = document.createElement("div");
-      div.classList.add("button-container");
-      div.appendChild(button);
+			var div = document.createElement("div");
+			div.classList.add("button-container");
+			div.appendChild(button);
 
-      shadow.appendChild(div);
-    }
-  }
-  customElements.define("button-comp", ButtonComp);
+			shadow.appendChild(div);
+		}
+	}
+	customElements.define("button-comp", ButtonComp);
 }
