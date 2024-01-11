@@ -186,8 +186,7 @@ class InstrictionsPage extends HTMLElement {
         <div class="player">${this.roomId}</div>
         </div>
       </div>
-    <titulo-comp class="title">Piedra Papel ó Tijeras</titulo-comp>
-
+   
     <div class="instructions-conteiner">
       <texto-comp class="codigo">Compartí el codigo:
       <span class="info-del-state">${this.roomId || ""}</span>

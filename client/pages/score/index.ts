@@ -206,7 +206,10 @@ class ScorePage extends HTMLElement {
       background-image:url(${imagen});
       background-repeat: round;
       height: 100vh;
-      margin-bottom:0px
+      margin-bottom:0px;
+	  display: flex;
+      flex-direction: column;
+      justify-content: space-around;
 
       }
     .mano{
@@ -239,7 +242,8 @@ class ScorePage extends HTMLElement {
         top: 10px;
     }
     .score{
-        margin:70px auto;
+        margin:10px auto;
+		margin-top: 20px;
         border: solid 3px;
         border-radius: 2px;
         width: 260px;
@@ -251,7 +255,7 @@ class ScorePage extends HTMLElement {
     }
 	@media only screen and (max-width: 600px) {
 		.score {
-			margin: 30px auto;
+			margin: 10px auto;
 		}
 	}
     .score-title{
@@ -310,9 +314,11 @@ class ScorePage extends HTMLElement {
       </div>
     </div>
     <div class = "resultados"></div>
-    
-    <div class="button-gameroom"></div>
-    <div class="button-salir"></div>
+    <div>
+	 <div class="button-gameroom"></div>
+     <div class="button-salir"></div>
+	</div>
+   
   </div>
     
    

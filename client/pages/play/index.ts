@@ -57,6 +57,12 @@ class Gamepage extends HTMLElement {
       .visitor{
         color: red;
       }
+      .manos-play{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        margin: 0 auto;
+      }
     </style>
 
     <div class="conteiner">
@@ -74,7 +80,7 @@ class Gamepage extends HTMLElement {
 
       <div class="game">
         <countdown-comp class="cuenta"></countdown-comp>
-        <manos-play></manos-play>
+        <manos-play class="manos-play"></manos-play>
       </div>
     </div>
       `;

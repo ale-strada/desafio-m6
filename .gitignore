@@ -5,3 +5,4 @@ dev.js
 db.js
 index.js
 oldPlay.ts
+.env
